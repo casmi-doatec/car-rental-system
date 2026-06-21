@@ -36,12 +36,12 @@ export default function SchedulePage() {
 
       <Paper sx={{ borderRadius: 2, border: "1px solid #E8E5E0", overflow: "hidden" }}>
         <TableContainer>
-          <Table size="small">
+          <Table>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontWeight: 700, minWidth: 140 }}>車両名</TableCell>
+                <TableCell sx={{ fontWeight: 700, minWidth: 160, fontSize: "0.95rem", py: 2 }}>車両名</TableCell>
                 {dayLabels.map((label, i) => (
-                  <TableCell key={i} align="center" sx={{ fontWeight: 600, fontSize: "0.7rem", minWidth: 80 }}>
+                  <TableCell key={i} align="center" sx={{ fontWeight: 600, fontSize: "0.85rem", minWidth: 100, py: 2 }}>
                     {label}
                   </TableCell>
                 ))}
@@ -49,25 +49,25 @@ export default function SchedulePage() {
             </TableHead>
             <TableBody>
               {vehicles.slice(page * 10, page * 10 + 10).map((vehicle) => (
-                <TableRow key={vehicle.id}>
-                  <TableCell sx={{ fontWeight: 500, whiteSpace: "nowrap", fontSize: "0.85rem" }}>{vehicle.name}</TableCell>
+                <TableRow key={vehicle.id} sx={{ height: 56 }}>
+                  <TableCell sx={{ fontWeight: 500, whiteSpace: "nowrap", fontSize: "0.95rem", py: 1.5 }}>{vehicle.name}</TableCell>
                   {days.map((date) => {
                     const event = scheduleEvents.find((e) => e.vehicleId === vehicle.id && e.date === date);
                     return (
-                      <TableCell key={date} align="center" sx={{ p: 0.5 }}>
+                      <TableCell key={date} align="center" sx={{ py: 1.5 }}>
                         {event ? (
                           <Chip
                             label={event.type === "booked" ? event.customer.split(" ")[0] : "整備"}
-                            size="small"
                             sx={{
-                              fontSize: "0.6rem",
-                              height: 20,
+                              fontSize: "0.8rem",
+                              height: 28,
                               bgcolor: event.type === "booked" ? "#2D3A3A" : "#f59e0b",
                               color: "white",
+                              fontWeight: 500,
                             }}
                           />
                         ) : (
-                          <Chip label="空き" size="small" variant="outlined" color="success" sx={{ fontSize: "0.6rem", height: 20 }} />
+                          <Chip label="空き" variant="outlined" color="success" sx={{ fontSize: "0.8rem", height: 28 }} />
                         )}
                       </TableCell>
                     );
