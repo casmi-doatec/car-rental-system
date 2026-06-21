@@ -175,6 +175,8 @@ export default function AdminPage() {
   const [vehicleRowsPerPage, setVehicleRowsPerPage] = useState(8);
   const [customerPage, setCustomerPage] = useState(0);
   const [customerRowsPerPage, setCustomerRowsPerPage] = useState(8);
+  const [schedulePage, setSchedulePage] = useState(0);
+  const [scheduleRowsPerPage, setScheduleRowsPerPage] = useState(8);
 
   const totalRevenue = bookings.reduce((sum, b) => sum + b.totalAmount, 0);
   const activeRentals = bookings.filter((b) => b.status === "active").length;
@@ -583,7 +585,7 @@ export default function AdminPage() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {vehicles.map((vehicle) => (
+                    {vehicles.slice(schedulePage * scheduleRowsPerPage, schedulePage * scheduleRowsPerPage + scheduleRowsPerPage).map((vehicle) => (
                       <TableRow key={vehicle.id}>
                         <TableCell sx={{ fontWeight: 500, whiteSpace: "nowrap" }}>{vehicle.name}</TableCell>
                         {next7Days.map((date) => {
@@ -610,6 +612,17 @@ export default function AdminPage() {
                   </TableBody>
                 </Table>
               </TableContainer>
+              <TablePagination
+                component="div"
+                count={vehicles.length}
+                page={schedulePage}
+                onPageChange={(_, p) => setSchedulePage(p)}
+                rowsPerPage={scheduleRowsPerPage}
+                onRowsPerPageChange={(e) => { setScheduleRowsPerPage(parseInt(e.target.value, 10)); setSchedulePage(0); }}
+                rowsPerPageOptions={[8, 15, 26]}
+                labelRowsPerPage="表示件数:"
+                labelDisplayedRows={({ from, to, count }) => `${from}-${to} / ${count}台`}
+              />
             </Paper>
           </>
         )}
