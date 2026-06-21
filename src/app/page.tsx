@@ -182,7 +182,7 @@ export default function HomePage() {
               >
                 <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
                   {[
-                    { label: t("admin.stats.vehicles"), value: "6+" },
+                    { label: t("admin.stats.vehicles"), value: "26+" },
                     { label: t("admin.stats.totalBookings"), value: "500+" },
                   ].map((stat) => (
                     <Box key={stat.label} sx={{ textAlign: "center" }}>
