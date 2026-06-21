@@ -15,6 +15,8 @@ import {
   ToggleButton,
 } from "@mui/material";
 import PeopleIcon from "@mui/icons-material/People";
+import SettingsIcon from "@mui/icons-material/Settings";
+import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { vehicles } from "@/data/demo";
@@ -34,93 +36,131 @@ export default function VehiclesPage() {
   const filtered = filter === "All" ? vehicles : vehicles.filter((v) => v.category === filter);
 
   return (
-    <Container maxWidth="lg" sx={{ py: 6 }}>
-      <Typography variant="h4" component="div" sx={{ fontWeight: 700 }} gutterBottom>
-        {t("vehicles.title")}
-      </Typography>
+    <>
+      {/* Page Header */}
+      <Box sx={{ bgcolor: "#2B4C7E", color: "white", py: { xs: 5, md: 7 } }}>
+        <Container maxWidth="lg">
+          <Box sx={{ width: 48, height: 3, bgcolor: "#C23B22", mb: 2, borderRadius: 2 }} />
+          <Typography variant="h3" component="h1" sx={{ fontWeight: 700, mb: 1, fontSize: { xs: "1.8rem", md: "2.4rem" } }}>
+            {t("vehicles.title")}
+          </Typography>
+          <Typography sx={{ opacity: 0.8, maxWidth: 500 }}>
+            {t("vehicles.subtitle")}
+          </Typography>
+        </Container>
+      </Box>
 
-      <ToggleButtonGroup
-        value={filter}
-        exclusive
-        onChange={(_, val) => val && setFilter(val)}
-        sx={{ mb: 4 }}
-      >
-        {categories.map((cat) => (
-          <ToggleButton key={cat} value={cat} sx={{ textTransform: "none", px: 3 }}>
-            {t(categoryKeys[cat])}
-          </ToggleButton>
-        ))}
-      </ToggleButtonGroup>
-
-      <Grid container spacing={3}>
-        {filtered.map((vehicle) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={vehicle.id}>
-            <Card
+      <Container maxWidth="lg" sx={{ py: 6 }}>
+        {/* Filters */}
+        <ToggleButtonGroup
+          value={filter}
+          exclusive
+          onChange={(_, val) => val && setFilter(val)}
+          sx={{ mb: 4 }}
+        >
+          {categories.map((cat) => (
+            <ToggleButton
+              key={cat}
+              value={cat}
               sx={{
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                borderRadius: 3,
-                overflow: "hidden",
-                transition: "transform 0.2s, box-shadow 0.2s",
-                "&:hover": { transform: "translateY(-4px)", boxShadow: 6 },
+                px: 3,
+                py: 1,
+                borderColor: "#DEDEDE",
+                "&.Mui-selected": { bgcolor: "#2B4C7E", color: "white", "&:hover": { bgcolor: "#1A3154" } },
               }}
             >
-              <CardMedia
-                component="img"
-                height="200"
-                image={vehicle.image}
-                alt={vehicle.name}
-                sx={{ objectFit: "cover" }}
-              />
-              <CardContent sx={{ flexGrow: 1 }}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                  <Typography variant="h6" component="div" sx={{ fontWeight: 600 }}>
-                    {vehicle.name}
-                  </Typography>
+              {t(categoryKeys[cat])}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+
+        {/* Vehicle grid */}
+        <Grid container spacing={3}>
+          {filtered.map((vehicle) => (
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={vehicle.id}>
+              <Card
+                elevation={0}
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  borderRadius: 3,
+                  overflow: "hidden",
+                  border: "1px solid #EDEDED",
+                  transition: "all 0.3s ease",
+                  "&:hover": { transform: "translateY(-4px)", boxShadow: "0 8px 30px rgba(0,0,0,0.08)" },
+                }}
+              >
+                <Box sx={{ position: "relative" }}>
+                  <CardMedia
+                    component="img"
+                    height="220"
+                    image={vehicle.image}
+                    alt={vehicle.name}
+                    sx={{ objectFit: "cover" }}
+                  />
                   <Chip
                     label={vehicle.available ? t("vehicles.available") : t("vehicles.unavailable")}
-                    color={vehicle.available ? "success" : "default"}
                     size="small"
+                    sx={{
+                      position: "absolute",
+                      top: 12,
+                      right: 12,
+                      fontWeight: 600,
+                      ...(vehicle.available
+                        ? { bgcolor: "rgba(16,185,129,0.9)", color: "white" }
+                        : { bgcolor: "rgba(0,0,0,0.6)", color: "white" }),
+                    }}
                   />
                 </Box>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                  {vehicle.category} | {vehicle.transmission} | {vehicle.fuelType}
-                </Typography>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                  <PeopleIcon fontSize="small" color="action" />
-                  <Typography variant="body2" color="text.secondary">
-                    {vehicle.seats} {t("vehicles.seats")}
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 1.5 }}>
+                    {vehicle.name}
                   </Typography>
-                </Box>
-                <Box sx={{ mt: 1, display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  {vehicle.features.map((f) => (
-                    <Chip key={f} label={f} size="small" variant="outlined" />
-                  ))}
-                </Box>
-              </CardContent>
-              <CardActions sx={{ justifyContent: "space-between", px: 2, pb: 2 }}>
-                <Typography variant="h6" component="div" color="secondary" sx={{ fontWeight: 700 }}>
-                  &yen;{vehicle.pricePerDay.toLocaleString()}
-                  <Typography component="span" variant="body2" color="text.secondary">
-                    {t("vehicles.perDay")}
-                  </Typography>
-                </Typography>
-                <Button
-                  component={Link}
-                  href={`/booking?vehicle=${vehicle.id}`}
-                  variant="contained"
-                  size="small"
-                  disabled={!vehicle.available}
-                  sx={{ bgcolor: "#e94560", "&:hover": { bgcolor: "#d63851" }, textTransform: "none" }}
-                >
-                  {t("vehicles.book")}
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </Container>
+                  <Box sx={{ display: "flex", gap: 2, mb: 2, color: "#5A5A5A" }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                      <PeopleIcon sx={{ fontSize: 18 }} />
+                      <Typography variant="body2">{vehicle.seats}{t("vehicles.seats")}</Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                      <SettingsIcon sx={{ fontSize: 18 }} />
+                      <Typography variant="body2">{vehicle.transmission}</Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                      <LocalGasStationIcon sx={{ fontSize: 18 }} />
+                      <Typography variant="body2">{vehicle.fuelType}</Typography>
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {vehicle.features.map((f) => (
+                      <Chip key={f} label={f} size="small" variant="outlined" sx={{ borderColor: "#DEDEDE", color: "#5A5A5A", fontSize: "0.75rem" }} />
+                    ))}
+                  </Box>
+                </CardContent>
+                <CardActions sx={{ justifyContent: "space-between", px: 2.5, pb: 2.5 }}>
+                  <Box>
+                    <Typography sx={{ fontWeight: 700, color: "#C23B22", fontSize: "1.3rem", lineHeight: 1 }}>
+                      &yen;{vehicle.pricePerDay.toLocaleString()}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: "#999" }}>
+                      {t("vehicles.perDay")}
+                    </Typography>
+                  </Box>
+                  <Button
+                    component={Link}
+                    href={`/booking?vehicle=${vehicle.id}`}
+                    variant="contained"
+                    disabled={!vehicle.available}
+                    sx={{ bgcolor: "#2B4C7E", "&:hover": { bgcolor: "#1A3154" }, px: 3 }}
+                  >
+                    {t("vehicles.book")}
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    </>
   );
 }

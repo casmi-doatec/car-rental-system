@@ -1,8 +1,9 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FAF8F5;
+  --foreground: #1C1C1C;
 }
 
 @theme inline {
@@ -13,4 +14,9 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  font-family: 'Noto Sans JP', 'Inter', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
 }
