@@ -179,7 +179,7 @@ export default function HomePage() {
                 </Box>
                 <Box sx={{ borderTop: "1px solid rgba(255,255,255,0.1)", pt: 2, mt: 1 }}>
                   <Typography sx={{ fontSize: "0.8rem", opacity: 0.6, textAlign: "center" }}>
-                    多言語対応：日本語 / EN / 中文 / 한국어
+                    多言語対応：日本語 / English / 中文
                   </Typography>
                 </Box>
               </Box>

@@ -25,7 +25,6 @@ const languages: { code: Locale; label: string }[] = [
   { code: "ja", label: "日本語" },
   { code: "en", label: "English" },
   { code: "zh", label: "中文" },
-  { code: "ko", label: "한국어" },
 ];
 
 export default function Navbar() {
