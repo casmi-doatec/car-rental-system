@@ -86,12 +86,12 @@ function BookingForm() {
             content: '""',
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(160deg, rgba(26,49,84,0.92) 0%, rgba(43,76,126,0.87) 100%)",
+            background: "linear-gradient(160deg, rgba(45,58,58,0.92) 0%, rgba(45,58,58,0.85) 100%)",
           },
         }}
       >
         <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
-          <Box sx={{ width: 48, height: 3, bgcolor: "#C23B22", mb: 2, borderRadius: 2 }} />
+          <Box sx={{ width: 40, height: 2, bgcolor: "#B8363B", mb: 2 }} />
           <Typography variant="h3" component="h1" sx={{ fontWeight: 700, mb: 1, fontSize: { xs: "1.8rem", md: "2.4rem" } }}>
             {t("booking.title")}
           </Typography>
@@ -161,7 +161,7 @@ function BookingForm() {
                       <Typography sx={{ fontWeight: 600, color: "#1C1C1C", mb: 0.5 }}>
                         {t("booking.estimate")}
                       </Typography>
-                      <Typography sx={{ fontSize: "1.8rem", fontWeight: 800, color: "#C23B22" }}>
+                      <Typography sx={{ fontSize: "1.8rem", fontWeight: 800, color: "#B8363B" }}>
                         &yen;{estimate.toLocaleString()}
                       </Typography>
                       <Typography variant="body2" sx={{ color: "#999" }}>
@@ -175,7 +175,7 @@ function BookingForm() {
                     variant="contained"
                     size="large"
                     fullWidth
-                    sx={{ mt: 3, bgcolor: "#C23B22", "&:hover": { bgcolor: "#A33018" }, py: 1.5, fontSize: "1.05rem" }}
+                    sx={{ mt: 3, bgcolor: "#B8363B", "&:hover": { bgcolor: "#9C2D31", transform: "translateY(-1px)" }, py: 1.5, fontSize: "1.05rem", borderRadius: 50, transition: "all 0.3s ease" }}
                   >
                     {t("booking.submit")}
                   </Button>
@@ -187,7 +187,7 @@ function BookingForm() {
           {/* Sidebar - Reservation flow */}
           <Grid size={{ xs: 12, md: 4 }}>
             <Paper elevation={0} sx={{ p: 4, borderRadius: 3, border: "1px solid #EDEDED" }}>
-              <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 3, color: "#2B4C7E" }}>
+              <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 3, color: "#2D3A3A" }}>
                 {t("booking.flow.title")}
               </Typography>
               <Stepper orientation="vertical" activeStep={0}>
@@ -206,7 +206,7 @@ function BookingForm() {
                 <Typography variant="body2" sx={{ color: "#5A5A5A", mb: 0.5 }}>
                   {selectedVehicle.category} | {selectedVehicle.seats}{t("vehicles.seats")} | {selectedVehicle.transmission}
                 </Typography>
-                <Typography sx={{ fontWeight: 700, color: "#C23B22", mt: 1 }}>
+                <Typography sx={{ fontWeight: 700, color: "#B8363B", mt: 1 }}>
                   &yen;{selectedVehicle.pricePerDay.toLocaleString()}{t("vehicles.perDay")}
                 </Typography>
               </Paper>

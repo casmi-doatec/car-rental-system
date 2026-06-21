@@ -101,7 +101,7 @@ export default function HomePage() {
             content: '""',
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(160deg, rgba(26,49,84,0.92) 0%, rgba(43,76,126,0.85) 50%, rgba(58,107,165,0.8) 100%)",
+            background: "linear-gradient(160deg, rgba(45,58,58,0.92) 0%, rgba(45,58,58,0.85) 50%, rgba(45,58,58,0.78) 100%)",
             zIndex: 0,
           },
         }}
@@ -111,7 +111,7 @@ export default function HomePage() {
           <Grid container spacing={4} sx={{ alignItems: "center" }}>
             <Grid size={{ xs: 12, md: 7 }}>
               {/* Accent bar */}
-              <Box sx={{ width: 48, height: 3, bgcolor: "#C23B22", mb: 3, borderRadius: 2 }} />
+              <Box sx={{ width: 40, height: 2, bgcolor: "#B8363B", mb: 3 }} />
               <Typography
                 variant="h2"
                 component="h1"
@@ -143,12 +143,13 @@ export default function HomePage() {
                   variant="contained"
                   size="large"
                   sx={{
-                    bgcolor: "#C23B22",
-                    "&:hover": { bgcolor: "#A33018" },
+                    bgcolor: "#B8363B",
+                    "&:hover": { bgcolor: "#9C2D31", transform: "translateY(-2px)", boxShadow: "0 4px 16px rgba(184,54,59,0.3)" },
                     px: 4,
                     py: 1.5,
-                    fontSize: "1rem",
-                    borderRadius: 2,
+                    fontSize: "0.95rem",
+                    borderRadius: 50,
+                    transition: "all 0.3s ease",
                   }}
                 >
                   {t("home.hero.cta")}
@@ -162,9 +163,10 @@ export default function HomePage() {
                     color: "white",
                     px: 4,
                     py: 1.5,
-                    fontSize: "1rem",
-                    borderRadius: 2,
-                    "&:hover": { borderColor: "white", bgcolor: "rgba(255,255,255,0.08)" },
+                    fontSize: "0.95rem",
+                    borderRadius: 50,
+                    transition: "all 0.3s ease",
+                    "&:hover": { borderColor: "white", bgcolor: "rgba(255,255,255,0.1)", transform: "translateY(-2px)" },
                   }}
                 >
                   {t("home.hero.secondary")}
@@ -206,7 +208,7 @@ export default function HomePage() {
       <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: "#FFFFFF" }}>
         <Container maxWidth="lg">
           <Box sx={{ textAlign: "center", mb: 8 }}>
-            <Box sx={{ width: 48, height: 3, bgcolor: "#C23B22", mx: "auto", mb: 2, borderRadius: 2 }} />
+            <Box sx={{ width: 40, height: 2, bgcolor: "#B8363B", mx: "auto", mb: 2 }} />
             <Typography variant="h4" component="h2" sx={{ fontWeight: 700, mb: 2, color: "#1C1C1C" }}>
               {t("home.features.title")}
             </Typography>
@@ -229,7 +231,7 @@ export default function HomePage() {
                     "&:hover": {
                       transform: "translateY(-4px)",
                       boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
-                      borderColor: "#2B4C7E",
+                      borderColor: "#2D3A3A",
                     },
                   }}
                 >
@@ -239,11 +241,11 @@ export default function HomePage() {
                         width: 56,
                         height: 56,
                         borderRadius: 2,
-                        bgcolor: "rgba(43,76,126,0.06)",
+                        bgcolor: "rgba(45,58,58,0.04)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: "#2B4C7E",
+                        color: "#2D3A3A",
                         mb: 2.5,
                       }}
                     >
@@ -267,7 +269,7 @@ export default function HomePage() {
       <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: "#FAF8F5" }}>
         <Container maxWidth="lg">
           <Box sx={{ textAlign: "center", mb: 8 }}>
-            <Box sx={{ width: 48, height: 3, bgcolor: "#C23B22", mx: "auto", mb: 2, borderRadius: 2 }} />
+            <Box sx={{ width: 40, height: 2, bgcolor: "#B8363B", mx: "auto", mb: 2 }} />
             <Typography variant="h4" component="h2" sx={{ fontWeight: 700, mb: 2, color: "#1C1C1C" }}>
               {t("home.popular.title")}
             </Typography>
@@ -352,7 +354,7 @@ export default function HomePage() {
                       <Typography variant="h6" component="h3" sx={{ fontWeight: 600, fontSize: "1rem" }}>
                         {vehicle.name}
                       </Typography>
-                      <Chip label={vehicle.category} size="small" sx={{ bgcolor: "rgba(43,76,126,0.08)", color: "#2B4C7E" }} />
+                      <Chip label={vehicle.category} size="small" sx={{ bgcolor: "rgba(45,58,58,0.06)", color: "#2D3A3A" }} />
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: "#5A5A5A" }}>
                       <PeopleIcon sx={{ fontSize: 16 }} />
@@ -364,7 +366,7 @@ export default function HomePage() {
                     </Box>
                   </CardContent>
                   <CardActions sx={{ justifyContent: "space-between", px: 2, pb: 2 }}>
-                    <Typography sx={{ fontWeight: 700, color: "#C23B22", fontSize: "1.1rem" }}>
+                    <Typography sx={{ fontWeight: 700, color: "#B8363B", fontSize: "1.1rem" }}>
                       &yen;{vehicle.pricePerDay.toLocaleString()}
                       <Typography component="span" variant="body2" sx={{ color: "#999", ml: 0.3 }}>
                         {t("vehicles.perDay")}
@@ -375,7 +377,7 @@ export default function HomePage() {
                       href={`/booking?vehicle=${vehicle.id}`}
                       variant="contained"
                       size="small"
-                      sx={{ bgcolor: "#2B4C7E", "&:hover": { bgcolor: "#1A3154" } }}
+                      sx={{ bgcolor: "#2D3A3A", borderRadius: 50, "&:hover": { bgcolor: "#1A2424", transform: "translateY(-1px)" }, transition: "all 0.3s ease" }}
                     >
                       {t("vehicles.book")}
                     </Button>
@@ -391,7 +393,7 @@ export default function HomePage() {
               href="/vehicles"
               variant="outlined"
               size="large"
-              sx={{ borderColor: "#2B4C7E", color: "#2B4C7E", px: 5, borderRadius: 2 }}
+              sx={{ borderColor: "#2D3A3A", color: "#2D3A3A", px: 5, borderRadius: 50, transition: "all 0.3s ease", "&:hover": { bgcolor: "#2D3A3A", color: "white", transform: "translateY(-2px)" } }}
             >
               {t("home.popular.viewAll")}
             </Button>
@@ -403,7 +405,7 @@ export default function HomePage() {
       <Box id="how-it-works" sx={{ py: { xs: 8, md: 12 }, bgcolor: "#FFFFFF" }}>
         <Container maxWidth="lg">
           <Box sx={{ textAlign: "center", mb: 8 }}>
-            <Box sx={{ width: 48, height: 3, bgcolor: "#C23B22", mx: "auto", mb: 2, borderRadius: 2 }} />
+            <Box sx={{ width: 40, height: 2, bgcolor: "#B8363B", mx: "auto", mb: 2 }} />
             <Typography variant="h4" component="h2" sx={{ fontWeight: 700, mb: 2, color: "#1C1C1C" }}>
               {t("home.howItWorks.title")}
             </Typography>
@@ -424,7 +426,7 @@ export default function HomePage() {
                       width: 64,
                       height: 64,
                       borderRadius: "50%",
-                      bgcolor: "#2B4C7E",
+                      bgcolor: "#2D3A3A",
                       color: "white",
                       display: "flex",
                       alignItems: "center",
@@ -453,7 +455,7 @@ export default function HomePage() {
       <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: "#FAF8F5" }}>
         <Container maxWidth="lg">
           <Box sx={{ textAlign: "center", mb: 8 }}>
-            <Box sx={{ width: 48, height: 3, bgcolor: "#C23B22", mx: "auto", mb: 2, borderRadius: 2 }} />
+            <Box sx={{ width: 40, height: 2, bgcolor: "#B8363B", mx: "auto", mb: 2 }} />
             <Typography variant="h4" component="h2" sx={{ fontWeight: 700, mb: 2, color: "#1C1C1C" }}>
               {t("home.pricing.title")}
             </Typography>
@@ -489,13 +491,13 @@ export default function HomePage() {
                         position: "absolute",
                         top: 16,
                         right: 16,
-                        bgcolor: "#C23B22",
+                        bgcolor: "#B8363B",
                         color: "white",
                         fontWeight: 600,
                       }}
                     />
                   )}
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#2B4C7E", mb: 1 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#2D3A3A", mb: 1 }}>
                     {plan.name}
                   </Typography>
                   <Box sx={{ mb: 3 }}>
@@ -511,7 +513,7 @@ export default function HomePage() {
                   </Typography>
                   {plan.includes.map((item) => (
                     <Box key={item} sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
-                      <CheckCircleIcon sx={{ fontSize: 18, color: "#2B4C7E" }} />
+                      <CheckCircleIcon sx={{ fontSize: 18, color: "#2D3A3A" }} />
                       <Typography variant="body2" sx={{ color: "#5A5A5A" }}>{item}</Typography>
                     </Box>
                   ))}
@@ -523,9 +525,11 @@ export default function HomePage() {
                     sx={{
                       mt: 3,
                       py: 1.2,
+                      borderRadius: 50,
+                      transition: "all 0.3s ease",
                       ...(idx === 1
-                        ? { bgcolor: "#2B4C7E", "&:hover": { bgcolor: "#1A3154" } }
-                        : { borderColor: "#2B4C7E", color: "#2B4C7E" }),
+                        ? { bgcolor: "#2D3A3A", "&:hover": { bgcolor: "#1A2424", transform: "translateY(-1px)" } }
+                        : { borderColor: "#2D3A3A", color: "#2D3A3A", "&:hover": { bgcolor: "#2D3A3A", color: "white", transform: "translateY(-1px)" } }),
                     }}
                   >
                     {t("home.cta.button")}
@@ -541,7 +545,7 @@ export default function HomePage() {
       <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: "#FFFFFF" }}>
         <Container maxWidth="lg">
           <Box sx={{ textAlign: "center", mb: 8 }}>
-            <Box sx={{ width: 48, height: 3, bgcolor: "#C23B22", mx: "auto", mb: 2, borderRadius: 2 }} />
+            <Box sx={{ width: 40, height: 2, bgcolor: "#B8363B", mx: "auto", mb: 2 }} />
             <Typography variant="h4" component="h2" sx={{ fontWeight: 700, mb: 2, color: "#1C1C1C" }}>
               {t("home.testimonials.title")}
             </Typography>
@@ -566,7 +570,7 @@ export default function HomePage() {
                 >
                   <CardContent sx={{ p: 0 }}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2 }}>
-                      <Avatar sx={{ bgcolor: "#2B4C7E", width: 40, height: 40, fontSize: 16 }}>
+                      <Avatar sx={{ bgcolor: "#2D3A3A", width: 40, height: 40, fontSize: 16 }}>
                         {review.avatar}
                       </Avatar>
                       <Box>
@@ -590,7 +594,7 @@ export default function HomePage() {
       <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: "#FAF8F5" }}>
         <Container maxWidth="md">
           <Box sx={{ textAlign: "center", mb: 8 }}>
-            <Box sx={{ width: 48, height: 3, bgcolor: "#C23B22", mx: "auto", mb: 2, borderRadius: 2 }} />
+            <Box sx={{ width: 40, height: 2, bgcolor: "#B8363B", mx: "auto", mb: 2 }} />
             <Typography variant="h4" component="h2" sx={{ fontWeight: 700, mb: 2, color: "#1C1C1C" }}>
               {t("home.faq.title")}
             </Typography>
@@ -628,7 +632,7 @@ export default function HomePage() {
       <Box
         sx={{
           py: { xs: 8, md: 12 },
-          background: "linear-gradient(160deg, #1A3154 0%, #2B4C7E 100%)",
+          background: "#2D3A3A",
           color: "white",
           textAlign: "center",
         }}
@@ -646,12 +650,13 @@ export default function HomePage() {
             variant="contained"
             size="large"
             sx={{
-              bgcolor: "#C23B22",
-              "&:hover": { bgcolor: "#A33018" },
+              bgcolor: "#B8363B",
+              "&:hover": { bgcolor: "#9C2D31", transform: "translateY(-2px)", boxShadow: "0 4px 16px rgba(184,54,59,0.3)" },
               px: 6,
               py: 1.5,
-              fontSize: "1.1rem",
-              borderRadius: 2,
+              fontSize: "1rem",
+              borderRadius: 50,
+              transition: "all 0.3s ease",
             }}
           >
             {t("home.cta.button")}

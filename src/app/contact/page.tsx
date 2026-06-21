@@ -51,12 +51,12 @@ export default function ContactPage() {
             content: '""',
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(160deg, rgba(26,49,84,0.92) 0%, rgba(43,76,126,0.85) 100%)",
+            background: "linear-gradient(160deg, rgba(45,58,58,0.92) 0%, rgba(45,58,58,0.85) 100%)",
           },
         }}
       >
         <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
-          <Box sx={{ width: 48, height: 3, bgcolor: "#C23B22", mb: 2, borderRadius: 2 }} />
+          <Box sx={{ width: 40, height: 2, bgcolor: "#B8363B", mb: 2 }} />
           <Typography variant="h3" component="h1" sx={{ fontWeight: 700, mb: 1, fontSize: { xs: "1.8rem", md: "2.4rem" } }}>
             {t("contact.title")}
           </Typography>
@@ -99,7 +99,7 @@ export default function ContactPage() {
                     variant="contained"
                     size="large"
                     fullWidth
-                    sx={{ mt: 3, bgcolor: "#C23B22", "&:hover": { bgcolor: "#A33018" }, py: 1.5 }}
+                    sx={{ mt: 3, bgcolor: "#B8363B", "&:hover": { bgcolor: "#9C2D31", transform: "translateY(-1px)" }, py: 1.5, borderRadius: 50, transition: "all 0.3s ease" }}
                   >
                     {t("contact.send")}
                   </Button>
@@ -110,13 +110,13 @@ export default function ContactPage() {
 
           {/* Contact Info & Map */}
           <Grid size={{ xs: 12, md: 5 }}>
-            <Paper elevation={0} sx={{ p: 4, borderRadius: 3, bgcolor: "#2B4C7E", color: "white", mb: 3 }}>
+            <Paper elevation={0} sx={{ p: 4, borderRadius: 3, bgcolor: "#2D3A3A", color: "white", mb: 3 }}>
               <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 3 }}>
                 {t("contact.info.title")}
               </Typography>
               {contactInfo.map((item, idx) => (
                 <Box key={idx} sx={{ display: "flex", alignItems: "flex-start", gap: 2, mb: 3 }}>
-                  <Box sx={{ color: "#C23B22", mt: 0.3 }}>{item.icon}</Box>
+                  <Box sx={{ color: "#B8363B", mt: 0.3 }}>{item.icon}</Box>
                   <Box>
                     <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.5)", display: "block", mb: 0.3 }}>
                       {item.label}
@@ -130,7 +130,7 @@ export default function ContactPage() {
             {/* Map placeholder */}
             <Paper elevation={0} sx={{ borderRadius: 3, overflow: "hidden", border: "1px solid #EDEDED" }}>
               <Box sx={{ p: 2, borderBottom: "1px solid #EDEDED" }}>
-                <Typography sx={{ fontWeight: 600, color: "#2B4C7E" }}>
+                <Typography sx={{ fontWeight: 600, color: "#2D3A3A" }}>
                   {t("contact.map.title")}
                 </Typography>
               </Box>
@@ -144,7 +144,7 @@ export default function ContactPage() {
                 }}
               >
                 <Box sx={{ textAlign: "center", color: "#999" }}>
-                  <LocationOnIcon sx={{ fontSize: 40, mb: 1, color: "#C23B22" }} />
+                  <LocationOnIcon sx={{ fontSize: 40, mb: 1, color: "#B8363B" }} />
                   <Typography variant="body2">沖縄県</Typography>
                   <Typography variant="caption" sx={{ color: "#BBB" }}>Google Maps 連携予定</Typography>
                 </Box>
@@ -153,7 +153,7 @@ export default function ContactPage() {
 
             {/* SNS */}
             <Paper elevation={0} sx={{ p: 3, borderRadius: 3, border: "1px solid #EDEDED", mt: 3 }}>
-              <Typography sx={{ fontWeight: 600, color: "#2B4C7E", mb: 2 }}>
+              <Typography sx={{ fontWeight: 600, color: "#2D3A3A", mb: 2 }}>
                 {t("contact.sns.title")}
               </Typography>
               <Box sx={{ display: "flex", gap: 1.5 }}>

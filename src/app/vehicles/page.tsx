@@ -50,12 +50,12 @@ export default function VehiclesPage() {
             content: '""',
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(160deg, rgba(26,49,84,0.9) 0%, rgba(43,76,126,0.85) 100%)",
+            background: "linear-gradient(160deg, rgba(45,58,58,0.92) 0%, rgba(45,58,58,0.85) 100%)",
           },
         }}
       >
         <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
-          <Box sx={{ width: 48, height: 3, bgcolor: "#C23B22", mb: 2, borderRadius: 2 }} />
+          <Box sx={{ width: 40, height: 2, bgcolor: "#B8363B", mb: 2 }} />
           <Typography variant="h3" component="h1" sx={{ fontWeight: 700, mb: 1, fontSize: { xs: "1.8rem", md: "2.4rem" } }}>
             {t("vehicles.title")}
           </Typography>
@@ -81,7 +81,7 @@ export default function VehiclesPage() {
                 px: 3,
                 py: 1,
                 borderColor: "#DEDEDE",
-                "&.Mui-selected": { bgcolor: "#2B4C7E", color: "white", "&:hover": { bgcolor: "#1A3154" } },
+                "&.Mui-selected": { bgcolor: "#2D3A3A", color: "white", "&:hover": { bgcolor: "#1A2424" } },
               }}
             >
               {t(categoryKeys[cat])}
@@ -154,7 +154,7 @@ export default function VehiclesPage() {
                 </CardContent>
                 <CardActions sx={{ justifyContent: "space-between", px: 2.5, pb: 2.5 }}>
                   <Box>
-                    <Typography sx={{ fontWeight: 700, color: "#C23B22", fontSize: "1.3rem", lineHeight: 1 }}>
+                    <Typography sx={{ fontWeight: 700, color: "#B8363B", fontSize: "1.3rem", lineHeight: 1 }}>
                       &yen;{vehicle.pricePerDay.toLocaleString()}
                     </Typography>
                     <Typography variant="caption" sx={{ color: "#999" }}>
@@ -166,7 +166,7 @@ export default function VehiclesPage() {
                     href={`/booking?vehicle=${vehicle.id}`}
                     variant="contained"
                     disabled={!vehicle.available}
-                    sx={{ bgcolor: "#2B4C7E", "&:hover": { bgcolor: "#1A3154" }, px: 3 }}
+                    sx={{ bgcolor: "#2D3A3A", "&:hover": { bgcolor: "#1A2424", transform: "translateY(-1px)" }, px: 3, borderRadius: 50, transition: "all 0.3s ease" }}
                   >
                     {t("vehicles.book")}
                   </Button>

@@ -46,70 +46,70 @@ export default function Navbar() {
         position="sticky"
         elevation={0}
         sx={{
-          bgcolor: "rgba(255,255,255,0.95)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid rgba(0,0,0,0.08)",
+          bgcolor: "#FFFFFF",
+          borderBottom: "1px solid #E8E5E0",
         }}
       >
-        <Toolbar className="max-w-7xl mx-auto w-full">
-          {/* Logo */}
+        <Toolbar className="max-w-7xl mx-auto w-full" sx={{ minHeight: { xs: 56, md: 64 } }}>
           <Box component={Link} href="/" sx={{ display: "flex", alignItems: "center", gap: 1.5, textDecoration: "none", flexGrow: 1 }}>
             <Box
               sx={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                bgcolor: "#2B4C7E",
+                width: 32,
+                height: 32,
+                bgcolor: "#2D3A3A",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 color: "white",
-                fontSize: 14,
-                fontWeight: 800,
+                fontSize: 13,
+                fontWeight: 700,
+                letterSpacing: "0.05em",
               }}
             >
               C
             </Box>
             <Box>
-              <Typography sx={{ color: "#1C1C1C", fontWeight: 700, fontSize: "1.1rem", lineHeight: 1.2, letterSpacing: "0.05em" }}>
+              <Typography sx={{ color: "#2D2D2D", fontWeight: 600, fontSize: "1rem", lineHeight: 1.2, letterSpacing: "0.08em" }}>
                 COMPASS
               </Typography>
-              <Typography sx={{ color: "#5A5A5A", fontSize: "0.6rem", letterSpacing: "0.15em" }}>
+              <Typography sx={{ color: "#999", fontSize: "0.55rem", letterSpacing: "0.2em" }}>
                 レンタカー
               </Typography>
             </Box>
           </Box>
 
           {/* Desktop nav */}
-          <Box sx={{ display: { xs: "none", md: "flex" }, gap: 0.5, alignItems: "center" }}>
+          <Box sx={{ display: { xs: "none", md: "flex" }, gap: 0, alignItems: "center" }}>
             {navLinks.map((link) => (
               <Button
                 key={link.href}
                 component={Link}
                 href={link.href}
                 sx={{
-                  color: "#1C1C1C",
-                  fontSize: "0.9rem",
+                  color: "#2D2D2D",
+                  fontSize: "0.85rem",
                   px: 2,
-                  "&:hover": { bgcolor: "rgba(43,76,126,0.06)" },
+                  py: 1,
+                  minWidth: "auto",
+                  letterSpacing: "0.04em",
+                  "&:hover": { bgcolor: "transparent", color: "#B8363B" },
                 }}
               >
                 {link.label}
               </Button>
             ))}
-            <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+            <Divider orientation="vertical" flexItem sx={{ mx: 1.5, borderColor: "#E8E5E0" }} />
             <Button
-              startIcon={<LanguageIcon sx={{ fontSize: 18 }} />}
+              startIcon={<LanguageIcon sx={{ fontSize: 16 }} />}
               onClick={(e) => setLangAnchor(e.currentTarget)}
-              sx={{ color: "#5A5A5A", fontSize: "0.85rem" }}
+              sx={{ color: "#6B6B6B", fontSize: "0.8rem", minWidth: "auto" }}
             >
               {languages.find((l) => l.code === locale)?.label}
             </Button>
           </Box>
 
-          {/* Mobile */}
           <IconButton
-            sx={{ display: { md: "none" }, color: "#1C1C1C" }}
+            sx={{ display: { md: "none" }, color: "#2D2D2D" }}
             onClick={() => setDrawerOpen(true)}
           >
             <MenuIcon />
@@ -117,43 +117,42 @@ export default function Navbar() {
         </Toolbar>
       </AppBar>
 
-      {/* Language menu */}
       <Menu anchorEl={langAnchor} open={Boolean(langAnchor)} onClose={() => setLangAnchor(null)}>
         {languages.map((lang) => (
           <MenuItem
             key={lang.code}
             selected={locale === lang.code}
             onClick={() => { setLocale(lang.code); setLangAnchor(null); }}
+            sx={{ fontSize: "0.9rem" }}
           >
             {lang.label}
           </MenuItem>
         ))}
       </Menu>
 
-      {/* Mobile drawer */}
       <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-        <Box sx={{ width: 280, pt: 3 }}>
-          <Box sx={{ px: 3, mb: 2 }}>
-            <Typography sx={{ fontWeight: 700, fontSize: "1.1rem", color: "#2B4C7E" }}>COMPASS</Typography>
-            <Typography sx={{ fontSize: "0.65rem", color: "#999", letterSpacing: "0.1em" }}>レンタカー</Typography>
+        <Box sx={{ width: 260, pt: 4 }}>
+          <Box sx={{ px: 3, mb: 3 }}>
+            <Typography sx={{ fontWeight: 600, fontSize: "1rem", color: "#2D3A3A", letterSpacing: "0.08em" }}>COMPASS</Typography>
+            <Typography sx={{ fontSize: "0.6rem", color: "#999", letterSpacing: "0.15em" }}>レンタカー</Typography>
           </Box>
-          <Divider />
-          <List>
+          <Divider sx={{ borderColor: "#E8E5E0" }} />
+          <List sx={{ px: 1 }}>
             {navLinks.map((link) => (
               <ListItem
                 key={link.href}
                 component={Link}
                 href={link.href}
                 onClick={() => setDrawerOpen(false)}
-                sx={{ py: 1.5, "&:hover": { bgcolor: "rgba(43,76,126,0.04)" } }}
+                sx={{ py: 1.5, "&:hover": { bgcolor: "#FAFAF7" } }}
               >
                 <ListItemText primary={link.label} />
               </ListItem>
             ))}
           </List>
-          <Divider />
+          <Divider sx={{ borderColor: "#E8E5E0", mx: 2 }} />
           <Box sx={{ px: 2, pt: 2 }}>
-            <Typography variant="caption" sx={{ color: "#999", mb: 1, display: "block" }}>
+            <Typography variant="caption" sx={{ color: "#999", mb: 1, display: "block", letterSpacing: "0.05em" }}>
               {t("common.language")}
             </Typography>
             {languages.map((lang) => (
@@ -164,7 +163,7 @@ export default function Navbar() {
                 sx={{
                   mb: 0.5,
                   justifyContent: "flex-start",
-                  ...(locale === lang.code && { bgcolor: "#2B4C7E", "&:hover": { bgcolor: "#1A3154" } }),
+                  ...(locale === lang.code && { bgcolor: "#2D3A3A", "&:hover": { bgcolor: "#1A2424" } }),
                 }}
                 onClick={() => { setLocale(lang.code); setDrawerOpen(false); }}
               >
