@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import {
-  Container,
   Typography,
   Grid,
   Card,
@@ -15,11 +14,11 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TablePagination,
   Paper,
   Chip,
   IconButton,
   Tooltip,
-  Drawer,
   List,
   ListItem,
   ListItemIcon,
@@ -28,7 +27,8 @@ import {
   Divider,
   LinearProgress,
   Avatar,
-  Badge,
+  Modal,
+  Button,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
@@ -39,11 +39,11 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SettingsIcon from "@mui/icons-material/Settings";
+import CloseIcon from "@mui/icons-material/Close";
 import { useLanguage } from "@/context/LanguageContext";
-import { bookings, vehicles, customers, scheduleEvents } from "@/data/demo";
+import { bookings, vehicles, customers, scheduleEvents, Booking } from "@/data/demo";
 
 const statusColors: Record<string, "warning" | "info" | "success" | "default" | "error"> = {
   pending: "warning",
@@ -72,9 +72,32 @@ const sideMenuItems = [
   { id: 5, label: "書類管理", icon: <DescriptionIcon /> },
 ];
 
+const modalStyle = {
+  position: "absolute" as const,
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: { xs: "90%", sm: 500 },
+  bgcolor: "background.paper",
+  borderRadius: 3,
+  boxShadow: 24,
+  p: 0,
+  outline: "none",
+};
+
 export default function AdminPage() {
   const { t } = useLanguage();
   const [activeSection, setActiveSection] = useState(0);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  // Pagination states
+  const [bookingPage, setBookingPage] = useState(0);
+  const [bookingRowsPerPage, setBookingRowsPerPage] = useState(5);
+  const [vehiclePage, setVehiclePage] = useState(0);
+  const [vehicleRowsPerPage, setVehicleRowsPerPage] = useState(8);
+  const [customerPage, setCustomerPage] = useState(0);
+  const [customerRowsPerPage, setCustomerRowsPerPage] = useState(8);
 
   const totalRevenue = bookings.reduce((sum, b) => sum + b.totalAmount, 0);
   const activeRentals = bookings.filter((b) => b.status === "active").length;
@@ -92,6 +115,7 @@ export default function AdminPage() {
   ];
 
   const getVehicleName = (id: string) => vehicles.find((v) => v.id === id)?.name || id;
+  const getVehicle = (id: string) => vehicles.find((v) => v.id === id);
 
   const today = new Date();
   const next7Days = Array.from({ length: 7 }, (_, i) => {
@@ -101,6 +125,11 @@ export default function AdminPage() {
   });
 
   const recentBookings = [...bookings].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5);
+
+  const handleViewBooking = (booking: Booking) => {
+    setSelectedBooking(booking);
+    setModalOpen(true);
+  };
 
   return (
     <Box sx={{ display: "flex", minHeight: "calc(100vh - 64px)" }}>
@@ -178,7 +207,6 @@ export default function AdminPage() {
               ダッシュボード
             </Typography>
 
-            {/* Stats */}
             <Grid container spacing={2} sx={{ mb: 4 }}>
               {stats.map((stat, idx) => (
                 <Grid size={{ xs: 6, sm: 4, md: 2 }} key={idx}>
@@ -198,7 +226,6 @@ export default function AdminPage() {
             </Grid>
 
             <Grid container spacing={3}>
-              {/* Recent bookings */}
               <Grid size={{ xs: 12, md: 8 }}>
                 <Paper elevation={0} sx={{ borderRadius: 3, border: "1px solid #EDEDED", overflow: "hidden" }}>
                   <Box sx={{ p: 2.5, borderBottom: "1px solid #EDEDED", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -214,6 +241,7 @@ export default function AdminPage() {
                           <TableCell>期間</TableCell>
                           <TableCell>金額</TableCell>
                           <TableCell>ステータス</TableCell>
+                          <TableCell>操作</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -226,6 +254,13 @@ export default function AdminPage() {
                             <TableCell>
                               <Chip label={statusLabels[booking.status]} color={statusColors[booking.status]} size="small" />
                             </TableCell>
+                            <TableCell>
+                              <Tooltip title="詳細を見る">
+                                <IconButton size="small" onClick={() => handleViewBooking(booking)}>
+                                  <VisibilityIcon fontSize="small" />
+                                </IconButton>
+                              </Tooltip>
+                            </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -234,7 +269,6 @@ export default function AdminPage() {
                 </Paper>
               </Grid>
 
-              {/* Vehicle utilization */}
               <Grid size={{ xs: 12, md: 4 }}>
                 <Paper elevation={0} sx={{ borderRadius: 3, border: "1px solid #EDEDED", p: 2.5, mb: 3 }}>
                   <Typography sx={{ fontWeight: 600, mb: 2 }}>車両稼働率</Typography>
@@ -243,33 +277,21 @@ export default function AdminPage() {
                       <Typography variant="body2" sx={{ color: "#5A5A5A" }}>利用中</Typography>
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>{vehicles.filter(v => !v.available).length}/{vehicles.length}</Typography>
                     </Box>
-                    <LinearProgress
-                      variant="determinate"
-                      value={(vehicles.filter(v => !v.available).length / vehicles.length) * 100}
-                      sx={{ height: 8, borderRadius: 4, bgcolor: "#EDEDED", "& .MuiLinearProgress-bar": { bgcolor: "#2B4C7E" } }}
-                    />
+                    <LinearProgress variant="determinate" value={(vehicles.filter(v => !v.available).length / vehicles.length) * 100} sx={{ height: 8, borderRadius: 4, bgcolor: "#EDEDED", "& .MuiLinearProgress-bar": { bgcolor: "#2B4C7E" } }} />
                   </Box>
                   <Box sx={{ mb: 2 }}>
                     <Box sx={{ display: "flex", justifyContent: "space-between", mb: 0.5 }}>
                       <Typography variant="body2" sx={{ color: "#5A5A5A" }}>予約確定</Typography>
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>{bookings.filter(b => b.status === "confirmed").length}件</Typography>
                     </Box>
-                    <LinearProgress
-                      variant="determinate"
-                      value={(bookings.filter(b => b.status === "confirmed").length / bookings.length) * 100}
-                      sx={{ height: 8, borderRadius: 4, bgcolor: "#EDEDED", "& .MuiLinearProgress-bar": { bgcolor: "#10b981" } }}
-                    />
+                    <LinearProgress variant="determinate" value={(bookings.filter(b => b.status === "confirmed").length / bookings.length) * 100} sx={{ height: 8, borderRadius: 4, bgcolor: "#EDEDED", "& .MuiLinearProgress-bar": { bgcolor: "#10b981" } }} />
                   </Box>
                   <Box>
                     <Box sx={{ display: "flex", justifyContent: "space-between", mb: 0.5 }}>
                       <Typography variant="body2" sx={{ color: "#5A5A5A" }}>完了済</Typography>
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>{completedBookings}件</Typography>
                     </Box>
-                    <LinearProgress
-                      variant="determinate"
-                      value={(completedBookings / bookings.length) * 100}
-                      sx={{ height: 8, borderRadius: 4, bgcolor: "#EDEDED", "& .MuiLinearProgress-bar": { bgcolor: "#8b5cf6" } }}
-                    />
+                    <LinearProgress variant="determinate" value={(completedBookings / bookings.length) * 100} sx={{ height: 8, borderRadius: 4, bgcolor: "#EDEDED", "& .MuiLinearProgress-bar": { bgcolor: "#8b5cf6" } }} />
                   </Box>
                 </Paper>
 
@@ -315,7 +337,7 @@ export default function AdminPage() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {bookings.map((booking) => (
+                    {bookings.slice(bookingPage * bookingRowsPerPage, bookingPage * bookingRowsPerPage + bookingRowsPerPage).map((booking) => (
                       <TableRow key={booking.id} hover>
                         <TableCell>{booking.id}</TableCell>
                         <TableCell>{booking.customerName}</TableCell>
@@ -327,7 +349,9 @@ export default function AdminPage() {
                         </TableCell>
                         <TableCell>
                           <Tooltip title="詳細を見る">
-                            <IconButton size="small"><VisibilityIcon fontSize="small" /></IconButton>
+                            <IconButton size="small" onClick={() => handleViewBooking(booking)}>
+                              <VisibilityIcon fontSize="small" />
+                            </IconButton>
                           </Tooltip>
                           <Tooltip title="PDF作成">
                             <IconButton size="small"><PictureAsPdfIcon fontSize="small" /></IconButton>
@@ -338,6 +362,17 @@ export default function AdminPage() {
                   </TableBody>
                 </Table>
               </TableContainer>
+              <TablePagination
+                component="div"
+                count={bookings.length}
+                page={bookingPage}
+                onPageChange={(_, p) => setBookingPage(p)}
+                rowsPerPage={bookingRowsPerPage}
+                onRowsPerPageChange={(e) => { setBookingRowsPerPage(parseInt(e.target.value, 10)); setBookingPage(0); }}
+                rowsPerPageOptions={[5, 10, 15]}
+                labelRowsPerPage="表示件数:"
+                labelDisplayedRows={({ from, to, count }) => `${from}-${to} / ${count}件`}
+              />
             </Paper>
           </>
         )}
@@ -364,7 +399,7 @@ export default function AdminPage() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {vehicles.map((vehicle) => (
+                    {vehicles.slice(vehiclePage * vehicleRowsPerPage, vehiclePage * vehicleRowsPerPage + vehicleRowsPerPage).map((vehicle) => (
                       <TableRow key={vehicle.id} hover>
                         <TableCell>{vehicle.id}</TableCell>
                         <TableCell sx={{ fontWeight: 600 }}>{vehicle.name}</TableCell>
@@ -373,17 +408,24 @@ export default function AdminPage() {
                         <TableCell>{vehicle.seats}</TableCell>
                         <TableCell>{vehicle.transmission}</TableCell>
                         <TableCell>
-                          <Chip
-                            label={vehicle.available ? "利用可能" : "貸出中"}
-                            color={vehicle.available ? "success" : "warning"}
-                            size="small"
-                          />
+                          <Chip label={vehicle.available ? "利用可能" : "貸出中"} color={vehicle.available ? "success" : "warning"} size="small" />
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
               </TableContainer>
+              <TablePagination
+                component="div"
+                count={vehicles.length}
+                page={vehiclePage}
+                onPageChange={(_, p) => setVehiclePage(p)}
+                rowsPerPage={vehicleRowsPerPage}
+                onRowsPerPageChange={(e) => { setVehicleRowsPerPage(parseInt(e.target.value, 10)); setVehiclePage(0); }}
+                rowsPerPageOptions={[8, 15, 26]}
+                labelRowsPerPage="表示件数:"
+                labelDisplayedRows={({ from, to, count }) => `${from}-${to} / ${count}台`}
+              />
             </Paper>
           </>
         )}
@@ -409,7 +451,7 @@ export default function AdminPage() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {customers.map((customer) => (
+                    {customers.slice(customerPage * customerRowsPerPage, customerPage * customerRowsPerPage + customerRowsPerPage).map((customer) => (
                       <TableRow key={customer.id} hover>
                         <TableCell>{customer.id}</TableCell>
                         <TableCell>
@@ -431,6 +473,17 @@ export default function AdminPage() {
                   </TableBody>
                 </Table>
               </TableContainer>
+              <TablePagination
+                component="div"
+                count={customers.length}
+                page={customerPage}
+                onPageChange={(_, p) => setCustomerPage(p)}
+                rowsPerPage={customerRowsPerPage}
+                onRowsPerPageChange={(e) => { setCustomerRowsPerPage(parseInt(e.target.value, 10)); setCustomerPage(0); }}
+                rowsPerPageOptions={[8, 10, 20]}
+                labelRowsPerPage="表示件数:"
+                labelDisplayedRows={({ from, to, count }) => `${from}-${to} / ${count}名`}
+              />
             </Paper>
           </>
         )}
@@ -514,6 +567,68 @@ export default function AdminPage() {
           </>
         )}
       </Box>
+
+      {/* Booking Detail Modal */}
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+        <Box sx={modalStyle}>
+          {selectedBooking && (
+            <>
+              <Box sx={{ p: 3, borderBottom: "1px solid #EDEDED", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <Typography sx={{ fontWeight: 700, fontSize: "1.1rem" }}>予約詳細 - {selectedBooking.id}</Typography>
+                <IconButton onClick={() => setModalOpen(false)} size="small">
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+              <Box sx={{ p: 3 }}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+                  <Chip label={statusLabels[selectedBooking.status]} color={statusColors[selectedBooking.status]} />
+                  <Typography variant="caption" sx={{ color: "#999" }}>登録日: {selectedBooking.createdAt}</Typography>
+                </Box>
+
+                <Typography variant="caption" sx={{ color: "#999", display: "block", mb: 0.5 }}>顧客情報</Typography>
+                <Paper variant="outlined" sx={{ p: 2, mb: 2, borderRadius: 2 }}>
+                  <Typography sx={{ fontWeight: 600, mb: 0.5 }}>{selectedBooking.customerName}</Typography>
+                  <Typography variant="body2" sx={{ color: "#5A5A5A" }}>{selectedBooking.customerEmail}</Typography>
+                  <Typography variant="body2" sx={{ color: "#5A5A5A" }}>{selectedBooking.customerPhone}</Typography>
+                </Paper>
+
+                <Typography variant="caption" sx={{ color: "#999", display: "block", mb: 0.5 }}>車両情報</Typography>
+                <Paper variant="outlined" sx={{ p: 2, mb: 2, borderRadius: 2 }}>
+                  <Typography sx={{ fontWeight: 600, mb: 0.5 }}>{getVehicleName(selectedBooking.vehicleId)}</Typography>
+                  {getVehicle(selectedBooking.vehicleId) && (
+                    <Typography variant="body2" sx={{ color: "#5A5A5A" }}>
+                      {getVehicle(selectedBooking.vehicleId)!.category} | {getVehicle(selectedBooking.vehicleId)!.seats}人乗り | {getVehicle(selectedBooking.vehicleId)!.transmission}
+                    </Typography>
+                  )}
+                </Paper>
+
+                <Typography variant="caption" sx={{ color: "#999", display: "block", mb: 0.5 }}>レンタル期間</Typography>
+                <Paper variant="outlined" sx={{ p: 2, mb: 2, borderRadius: 2 }}>
+                  <Typography sx={{ fontWeight: 600 }}>
+                    {selectedBooking.startDate} ~ {selectedBooking.endDate}
+                  </Typography>
+                </Paper>
+
+                <Typography variant="caption" sx={{ color: "#999", display: "block", mb: 0.5 }}>合計金額</Typography>
+                <Paper variant="outlined" sx={{ p: 2, mb: 3, borderRadius: 2, bgcolor: "rgba(43,76,126,0.03)" }}>
+                  <Typography sx={{ fontWeight: 700, fontSize: "1.5rem", color: "#C23B22" }}>
+                    ¥{selectedBooking.totalAmount.toLocaleString()}
+                  </Typography>
+                </Paper>
+
+                <Box sx={{ display: "flex", gap: 1.5 }}>
+                  <Button variant="contained" fullWidth sx={{ bgcolor: "#2B4C7E", "&:hover": { bgcolor: "#1A3154" } }}>
+                    PDF作成
+                  </Button>
+                  <Button variant="outlined" fullWidth sx={{ borderColor: "#2B4C7E", color: "#2B4C7E" }}>
+                    編集
+                  </Button>
+                </Box>
+              </Box>
+            </>
+          )}
+        </Box>
+      </Modal>
     </Box>
   );
 }
