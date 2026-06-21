@@ -1,5 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import IconButton from "@mui/material/IconButton";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import {
   Box,
   Container,
@@ -69,7 +72,18 @@ export default function HomePage() {
     { q: t("home.faq.q5"), a: t("home.faq.a5") },
   ];
 
-  const popularVehicles = vehicles.filter((v) => v.available).slice(0, 3);
+  const popularVehicles = vehicles.filter((v) => v.available).slice(0, 8);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = 340;
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
     <>
@@ -262,12 +276,61 @@ export default function HomePage() {
             </Typography>
           </Box>
 
-          <Grid container spacing={3}>
-            {popularVehicles.map((vehicle) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={vehicle.id}>
+          {/* Carousel with arrows */}
+          <Box sx={{ position: "relative" }}>
+            <IconButton
+              onClick={() => scroll("left")}
+              sx={{
+                position: "absolute",
+                left: { xs: -8, md: -20 },
+                top: "50%",
+                transform: "translateY(-50%)",
+                zIndex: 2,
+                bgcolor: "white",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.12)",
+                "&:hover": { bgcolor: "white", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" },
+              }}
+            >
+              <ArrowBackIosNewIcon sx={{ fontSize: 18 }} />
+            </IconButton>
+            <IconButton
+              onClick={() => scroll("right")}
+              sx={{
+                position: "absolute",
+                right: { xs: -8, md: -20 },
+                top: "50%",
+                transform: "translateY(-50%)",
+                zIndex: 2,
+                bgcolor: "white",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.12)",
+                "&:hover": { bgcolor: "white", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" },
+              }}
+            >
+              <ArrowForwardIosIcon sx={{ fontSize: 18 }} />
+            </IconButton>
+
+            <Box
+              ref={scrollRef}
+              sx={{
+                display: "flex",
+                gap: 3,
+                overflowX: "auto",
+                scrollSnapType: "x mandatory",
+                px: 1,
+                py: 1,
+                "&::-webkit-scrollbar": { display: "none" },
+                scrollbarWidth: "none",
+              }}
+            >
+              {popularVehicles.map((vehicle) => (
                 <Card
+                  key={vehicle.id}
+                  elevation={0}
                   sx={{
-                    height: "100%",
+                    minWidth: 300,
+                    maxWidth: 320,
+                    flexShrink: 0,
+                    scrollSnapAlign: "start",
                     display: "flex",
                     flexDirection: "column",
                     borderRadius: 3,
@@ -276,25 +339,24 @@ export default function HomePage() {
                     transition: "all 0.3s ease",
                     "&:hover": { transform: "translateY(-4px)", boxShadow: "0 8px 30px rgba(0,0,0,0.08)" },
                   }}
-                  elevation={0}
                 >
                   <CardMedia
                     component="img"
-                    height="200"
+                    height="180"
                     image={vehicle.image}
                     alt={vehicle.name}
                     sx={{ objectFit: "cover" }}
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                      <Typography variant="h6" component="h3" sx={{ fontWeight: 600 }}>
+                      <Typography variant="h6" component="h3" sx={{ fontWeight: 600, fontSize: "1rem" }}>
                         {vehicle.name}
                       </Typography>
                       <Chip label={vehicle.category} size="small" sx={{ bgcolor: "rgba(43,76,126,0.08)", color: "#2B4C7E" }} />
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: "#5A5A5A" }}>
-                      <PeopleIcon fontSize="small" />
-                      <Typography variant="body2">{vehicle.seats} {t("vehicles.seats")}</Typography>
+                      <PeopleIcon sx={{ fontSize: 16 }} />
+                      <Typography variant="body2">{vehicle.seats}{t("vehicles.seats")}</Typography>
                       <Typography variant="body2">|</Typography>
                       <Typography variant="body2">{vehicle.transmission}</Typography>
                       <Typography variant="body2">|</Typography>
@@ -302,7 +364,7 @@ export default function HomePage() {
                     </Box>
                   </CardContent>
                   <CardActions sx={{ justifyContent: "space-between", px: 2, pb: 2 }}>
-                    <Typography sx={{ fontWeight: 700, color: "#C23B22", fontSize: "1.2rem" }}>
+                    <Typography sx={{ fontWeight: 700, color: "#C23B22", fontSize: "1.1rem" }}>
                       &yen;{vehicle.pricePerDay.toLocaleString()}
                       <Typography component="span" variant="body2" sx={{ color: "#999", ml: 0.3 }}>
                         {t("vehicles.perDay")}
@@ -319,9 +381,9 @@ export default function HomePage() {
                     </Button>
                   </CardActions>
                 </Card>
-              </Grid>
-            ))}
-          </Grid>
+              ))}
+            </Box>
+          </Box>
 
           <Box sx={{ textAlign: "center", mt: 5 }}>
             <Button
