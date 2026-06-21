@@ -25,12 +25,12 @@ export default function VehiclesPage() {
   const { t } = useLanguage();
   const [filter, setFilter] = useState("All");
 
-  const categories = ["All", "Compact", "SUV", "Van"];
+  const categories = ["All", "コンパクト", "SUV", "バン"];
   const categoryKeys: Record<string, string> = {
     All: "vehicles.filter.all",
-    Compact: "vehicles.filter.compact",
+    "コンパクト": "vehicles.filter.compact",
     SUV: "vehicles.filter.suv",
-    Van: "vehicles.filter.van",
+    "バン": "vehicles.filter.van",
   };
 
   const filtered = filter === "All" ? vehicles : vehicles.filter((v) => v.category === filter);

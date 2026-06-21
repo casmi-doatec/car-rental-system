@@ -15,6 +15,9 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutlined";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import ChatIcon from "@mui/icons-material/Chat";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function ContactPage() {
@@ -154,10 +157,17 @@ export default function ContactPage() {
                 {t("contact.sns.title")}
               </Typography>
               <Box sx={{ display: "flex", gap: 1.5 }}>
-                {["LINE", "Instagram", "Facebook"].map((sns) => (
+                {[
+                  { name: "LINE", icon: <ChatIcon sx={{ fontSize: 20 }} />, color: "#06C755" },
+                  { name: "Instagram", icon: <InstagramIcon sx={{ fontSize: 20 }} />, color: "#E4405F" },
+                  { name: "Facebook", icon: <FacebookIcon sx={{ fontSize: 20 }} />, color: "#1877F2" },
+                ].map((sns) => (
                   <Box
-                    key={sns}
+                    key={sns.name}
                     sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
                       px: 2,
                       py: 1,
                       borderRadius: 2,
@@ -165,10 +175,11 @@ export default function ContactPage() {
                       fontSize: "0.85rem",
                       color: "#5A5A5A",
                       cursor: "pointer",
-                      "&:hover": { borderColor: "#2B4C7E", color: "#2B4C7E" },
+                      "&:hover": { borderColor: sns.color, color: sns.color },
                     }}
                   >
-                    {sns}
+                    {sns.icon}
+                    {sns.name}
                   </Box>
                 ))}
               </Box>

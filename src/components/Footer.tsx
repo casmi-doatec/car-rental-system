@@ -1,5 +1,8 @@
 "use client";
 import { Box, Typography, Container, Grid, Divider } from "@mui/material";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import ChatIcon from "@mui/icons-material/Chat";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -85,10 +88,17 @@ export default function Footer() {
               SNS
             </Typography>
             <Box sx={{ display: "flex", gap: 1 }}>
-              {["LINE", "Instagram", "Facebook"].map((sns) => (
+              {[
+                { name: "LINE", icon: <ChatIcon sx={{ fontSize: 18 }} /> },
+                { name: "Instagram", icon: <InstagramIcon sx={{ fontSize: 18 }} /> },
+                { name: "Facebook", icon: <FacebookIcon sx={{ fontSize: 18 }} /> },
+              ].map((sns) => (
                 <Box
-                  key={sns}
+                  key={sns.name}
                   sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.5,
                     px: 1.5,
                     py: 0.8,
                     borderRadius: 1.5,
@@ -99,7 +109,8 @@ export default function Footer() {
                     cursor: "pointer",
                   }}
                 >
-                  {sns}
+                  {sns.icon}
+                  {sns.name}
                 </Box>
               ))}
             </Box>

@@ -37,6 +37,14 @@ const statusColors: Record<string, "warning" | "info" | "success" | "default" | 
   cancelled: "error",
 };
 
+const statusLabels: Record<string, string> = {
+  pending: "保留中",
+  confirmed: "確認済",
+  active: "利用中",
+  completed: "完了",
+  cancelled: "キャンセル",
+};
+
 export default function AdminPage() {
   const { t } = useLanguage();
   const [tab, setTab] = useState(0);
@@ -119,7 +127,7 @@ export default function AdminPage() {
                       <TableCell>{booking.startDate} ~ {booking.endDate}</TableCell>
                       <TableCell>¥{booking.totalAmount.toLocaleString()}</TableCell>
                       <TableCell>
-                        <Chip label={booking.status} color={statusColors[booking.status]} size="small" />
+                        <Chip label={statusLabels[booking.status]} color={statusColors[booking.status]} size="small" />
                       </TableCell>
                       <TableCell>
                         <Tooltip title="詳細を見る">
