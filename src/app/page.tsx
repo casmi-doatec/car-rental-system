@@ -35,10 +35,10 @@ import { useLanguage } from "@/context/LanguageContext";
 import { vehicles } from "@/data/demo";
 
 const testimonials = [
-  { name: "Emily R.", country: "USA", rating: 5, text: "Excellent service! The car was spotless and the staff spoke perfect English. Made our Okinawa trip so much easier.", avatar: "E" },
-  { name: "佐藤 美咲", country: "Japan", rating: 5, text: "初めてのレンタカーでしたが、スタッフの方が丁寧に説明してくれて安心できました。車も新しくて快適でした。", avatar: "佐" },
-  { name: "Wang L.", country: "China", rating: 4, text: "车辆很新很干净，服务人员态度很好。中文沟通完全没有问题，推荐给来冲绳旅游的朋友。", avatar: "W" },
-  { name: "Suzuki T.", country: "Japan", rating: 5, text: "車がとても綺麗で、料金も分かりやすかったです。外国の友人にも安心して勧められるサービスです。", avatar: "S" },
+  { name: "田中 健太", country: "日本", rating: 5, text: "Excellent service! The car was spotless and the staff spoke perfect English. Made our Okinawa trip so much easier.", avatar: "田" },
+  { name: "佐藤 美咲", country: "日本", rating: 5, text: "初めてのレンタカーでしたが、スタッフの方が丁寧に説明してくれて安心できました。車も新しくて快適でした。", avatar: "佐" },
+  { name: "山田 太郎", country: "日本", rating: 4, text: "车辆很新很干净，服务人员态度很好。中文沟通完全没有问题，推荐给来冲绳旅游的朋友。", avatar: "山" },
+  { name: "鈴木 花子", country: "日本", rating: 5, text: "車がとても綺麗で、料金も分かりやすかったです。外国の友人にも安心して勧められるサービスです。", avatar: "鈴" },
 ];
 
 export default function HomePage() {
