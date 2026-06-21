@@ -29,7 +29,7 @@ export default function Footer() {
               </Box>
               <Box>
                 <Typography sx={{ fontWeight: 700, letterSpacing: "0.05em" }}>COMPASS</Typography>
-                <Typography sx={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", letterSpacing: "0.15em" }}>RENTAL CAR</Typography>
+                <Typography sx={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", letterSpacing: "0.15em" }}>レンタカー</Typography>
               </Box>
             </Box>
             <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.5)", lineHeight: 1.8, maxWidth: 280 }}>
@@ -39,7 +39,7 @@ export default function Footer() {
 
           <Grid size={{ xs: 6, md: 2 }}>
             <Typography sx={{ fontWeight: 600, mb: 2, fontSize: "0.85rem", letterSpacing: "0.05em" }}>
-              MENU
+              メニュー
             </Typography>
             {[
               { href: "/", label: t("nav.home") },
@@ -67,7 +67,7 @@ export default function Footer() {
 
           <Grid size={{ xs: 6, md: 3 }}>
             <Typography sx={{ fontWeight: 600, mb: 2, fontSize: "0.85rem", letterSpacing: "0.05em" }}>
-              CONTACT
+              お問い合わせ
             </Typography>
             <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.5)", mb: 1 }}>
               {t("contact.info.phone")}
@@ -108,7 +108,7 @@ export default function Footer() {
 
         <Divider sx={{ borderColor: "rgba(255,255,255,0.08)", my: 4 }} />
         <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.3)", textAlign: "center", fontSize: "0.8rem" }}>
-          &copy; 2026 COMPASS Co., Ltd. All rights reserved.
+          &copy; 2026 株式会社COMPASS All rights reserved.
         </Typography>
       </Container>
     </Box>

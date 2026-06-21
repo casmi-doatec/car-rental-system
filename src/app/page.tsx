@@ -78,34 +78,20 @@ export default function HomePage() {
         sx={{
           position: "relative",
           overflow: "hidden",
-          background: "linear-gradient(160deg, #1A3154 0%, #2B4C7E 40%, #3A6BA5 100%)",
+          backgroundImage: "url(https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1920&h=900&fit=crop)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
           color: "white",
           py: { xs: 10, md: 16 },
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(160deg, rgba(26,49,84,0.92) 0%, rgba(43,76,126,0.85) 50%, rgba(58,107,165,0.8) 100%)",
+            zIndex: 0,
+          },
         }}
       >
-        {/* Decorative circle */}
-        <Box
-          sx={{
-            position: "absolute",
-            top: -100,
-            right: -100,
-            width: 500,
-            height: 500,
-            borderRadius: "50%",
-            background: "rgba(255,255,255,0.03)",
-          }}
-        />
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: -150,
-            left: -50,
-            width: 400,
-            height: 400,
-            borderRadius: "50%",
-            background: "rgba(255,255,255,0.02)",
-          }}
-        />
 
         <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
           <Grid container spacing={4} sx={{ alignItems: "center" }}>
@@ -193,7 +179,7 @@ export default function HomePage() {
                 </Box>
                 <Box sx={{ borderTop: "1px solid rgba(255,255,255,0.1)", pt: 2, mt: 1 }}>
                   <Typography sx={{ fontSize: "0.8rem", opacity: 0.6, textAlign: "center" }}>
-                    EN / 日本語 / 中文 / 한국어
+                    多言語対応：日本語 / EN / 中文 / 한국어
                   </Typography>
                 </Box>
               </Box>

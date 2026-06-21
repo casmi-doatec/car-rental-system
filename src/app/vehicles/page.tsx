@@ -38,8 +38,23 @@ export default function VehiclesPage() {
   return (
     <>
       {/* Page Header */}
-      <Box sx={{ bgcolor: "#2B4C7E", color: "white", py: { xs: 5, md: 7 } }}>
-        <Container maxWidth="lg">
+      <Box
+        sx={{
+          position: "relative",
+          backgroundImage: "url(https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=1920&h=600&fit=crop)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          color: "white",
+          py: { xs: 5, md: 7 },
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(160deg, rgba(26,49,84,0.9) 0%, rgba(43,76,126,0.85) 100%)",
+          },
+        }}
+      >
+        <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
           <Box sx={{ width: 48, height: 3, bgcolor: "#C23B22", mb: 2, borderRadius: 2 }} />
           <Typography variant="h3" component="h1" sx={{ fontWeight: 700, mb: 1, fontSize: { xs: "1.8rem", md: "2.4rem" } }}>
             {t("vehicles.title")}

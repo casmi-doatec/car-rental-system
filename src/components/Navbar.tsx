@@ -76,7 +76,7 @@ export default function Navbar() {
                 COMPASS
               </Typography>
               <Typography sx={{ color: "#5A5A5A", fontSize: "0.6rem", letterSpacing: "0.15em" }}>
-                RENTAL CAR
+                レンタカー
               </Typography>
             </Box>
           </Box>
@@ -136,7 +136,7 @@ export default function Navbar() {
         <Box sx={{ width: 280, pt: 3 }}>
           <Box sx={{ px: 3, mb: 2 }}>
             <Typography sx={{ fontWeight: 700, fontSize: "1.1rem", color: "#2B4C7E" }}>COMPASS</Typography>
-            <Typography sx={{ fontSize: "0.65rem", color: "#999", letterSpacing: "0.1em" }}>RENTAL CAR</Typography>
+            <Typography sx={{ fontSize: "0.65rem", color: "#999", letterSpacing: "0.1em" }}>レンタカー</Typography>
           </Box>
           <Divider />
           <List>

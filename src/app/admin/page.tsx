@@ -102,12 +102,12 @@ export default function AdminPage() {
                 <TableHead>
                   <TableRow>
                     <TableCell>ID</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell>Vehicle</TableCell>
-                    <TableCell>Dates</TableCell>
-                    <TableCell>Amount</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Actions</TableCell>
+                    <TableCell>顧客名</TableCell>
+                    <TableCell>車両</TableCell>
+                    <TableCell>期間</TableCell>
+                    <TableCell>金額</TableCell>
+                    <TableCell>ステータス</TableCell>
+                    <TableCell>操作</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -122,10 +122,10 @@ export default function AdminPage() {
                         <Chip label={booking.status} color={statusColors[booking.status]} size="small" />
                       </TableCell>
                       <TableCell>
-                        <Tooltip title="View Details">
+                        <Tooltip title="詳細を見る">
                           <IconButton size="small"><VisibilityIcon fontSize="small" /></IconButton>
                         </Tooltip>
-                        <Tooltip title="Generate PDF">
+                        <Tooltip title="PDF作成">
                           <IconButton size="small"><PictureAsPdfIcon fontSize="small" /></IconButton>
                         </Tooltip>
                       </TableCell>
@@ -143,12 +143,12 @@ export default function AdminPage() {
                 <TableHead>
                   <TableRow>
                     <TableCell>ID</TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Category</TableCell>
-                    <TableCell>Price/Day</TableCell>
-                    <TableCell>Seats</TableCell>
-                    <TableCell>Transmission</TableCell>
-                    <TableCell>Status</TableCell>
+                    <TableCell>車両名</TableCell>
+                    <TableCell>カテゴリ</TableCell>
+                    <TableCell>日額料金</TableCell>
+                    <TableCell>定員</TableCell>
+                    <TableCell>変速機</TableCell>
+                    <TableCell>ステータス</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -162,7 +162,7 @@ export default function AdminPage() {
                       <TableCell>{vehicle.transmission}</TableCell>
                       <TableCell>
                         <Chip
-                          label={vehicle.available ? "Available" : "Rented"}
+                          label={vehicle.available ? "利用可能" : "貸出中"}
                           color={vehicle.available ? "success" : "warning"}
                           size="small"
                         />
@@ -181,11 +181,11 @@ export default function AdminPage() {
                 <TableHead>
                   <TableRow>
                     <TableCell>ID</TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Phone</TableCell>
-                    <TableCell>Nationality</TableCell>
-                    <TableCell>Bookings</TableCell>
+                    <TableCell>氏名</TableCell>
+                    <TableCell>メール</TableCell>
+                    <TableCell>電話番号</TableCell>
+                    <TableCell>国籍</TableCell>
+                    <TableCell>予約回数</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -210,7 +210,7 @@ export default function AdminPage() {
               <Table size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 700 }}>Vehicle</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>車両名</TableCell>
                     {next7Days.map((date) => (
                       <TableCell key={date} align="center" sx={{ fontWeight: 600, fontSize: "0.75rem" }}>
                         {date.slice(5)}
@@ -230,13 +230,13 @@ export default function AdminPage() {
                           <TableCell key={date} align="center" sx={{ p: 0.5 }}>
                             {event ? (
                               <Chip
-                                label={event.type === "booked" ? event.customer.split(" ")[0] : "Maint."}
+                                label={event.type === "booked" ? event.customer.split(" ")[0] : "整備"}
                                 size="small"
                                 color={event.type === "booked" ? "primary" : "warning"}
                                 sx={{ fontSize: "0.65rem", height: 22 }}
                               />
                             ) : (
-                              <Chip label="Free" size="small" variant="outlined" color="success" sx={{ fontSize: "0.65rem", height: 22 }} />
+                              <Chip label="空き" size="small" variant="outlined" color="success" sx={{ fontSize: "0.65rem", height: 22 }} />
                             )}
                           </TableCell>
                         );
