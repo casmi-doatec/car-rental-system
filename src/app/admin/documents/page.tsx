@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Typography, Box, Paper, Grid, Card, CardContent, Button, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Tooltip, Modal } from "@mui/material";
+import { Typography, Box, Paper, Grid, Card, CardContent, Button, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Tooltip, Modal, Snackbar, Alert } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 import DownloadIcon from "@mui/icons-material/Download";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -35,6 +35,7 @@ const statusMap: Record<string, { label: string; color: "default" | "info" | "su
 
 export default function DocumentsPage() {
   const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "" });
 
   const generateAllDocs = () => {
     const doc = new jsPDF();
@@ -105,9 +106,9 @@ export default function DocumentsPage() {
                   <TableCell sx={{ fontSize: "0.8rem" }}>{doc.createdAt}</TableCell>
                   <TableCell><Chip label={statusMap[doc.status].label} color={statusMap[doc.status].color} size="small" /></TableCell>
                   <TableCell>
-                    <Tooltip title="プレビュー"><IconButton size="small"><VisibilityIcon fontSize="small" /></IconButton></Tooltip>
-                    <Tooltip title="ダウンロード"><IconButton size="small"><DownloadIcon fontSize="small" /></IconButton></Tooltip>
-                    <Tooltip title="メール送信"><IconButton size="small"><SendIcon fontSize="small" /></IconButton></Tooltip>
+                    <Tooltip title="プレビュー"><IconButton size="small" onClick={() => setSnackbar({ open: true, message: `${doc.id} のプレビューを表示中...` })}><VisibilityIcon fontSize="small" /></IconButton></Tooltip>
+                    <Tooltip title="ダウンロード"><IconButton size="small" onClick={() => { const d = new jsPDF(); d.text(`COMPASS - ${doc.type}`, 20, 25); d.text(`Customer: ${doc.customer}`, 20, 40); d.text(`Date: ${doc.createdAt}`, 20, 50); d.save(`COMPASS_${doc.id}.pdf`); setSnackbar({ open: true, message: `${doc.id} をダウンロードしました。` }); }}><DownloadIcon fontSize="small" /></IconButton></Tooltip>
+                    <Tooltip title="メール送信"><IconButton size="small" onClick={() => setSnackbar({ open: true, message: `${doc.customer}様に${doc.type}をメール送信しました。` })}><SendIcon fontSize="small" /></IconButton></Tooltip>
                   </TableCell>
                 </TableRow>
               ))}
@@ -115,6 +116,10 @@ export default function DocumentsPage() {
           </Table>
         </TableContainer>
       </Paper>
+
+      <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={() => setSnackbar({ ...snackbar, open: false })} anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
+        <Alert severity="success" onClose={() => setSnackbar({ ...snackbar, open: false })}>{snackbar.message}</Alert>
+      </Snackbar>
     </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Typography, Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Chip, IconButton, Tooltip, Button, Modal, TextField, MenuItem, Grid, Divider } from "@mui/material";
+import { Typography, Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Chip, IconButton, Tooltip, Button, Modal, TextField, MenuItem, Grid, Divider, Snackbar, Alert } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import CloseIcon from "@mui/icons-material/Close";
@@ -27,6 +27,7 @@ export default function InquiriesPage() {
   const [page, setPage] = useState(0);
   const [selected, setSelected] = useState<typeof demoInquiries[0] | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "" });
 
   return (
     <>
@@ -64,12 +65,12 @@ export default function InquiriesPage() {
                     </Tooltip>
                     {inq.status === "new" && (
                       <Tooltip title="見積り作成">
-                        <IconButton size="small" color="primary"><RequestQuoteIcon fontSize="small" /></IconButton>
+                        <IconButton size="small" color="primary" onClick={() => setSnackbar({ open: true, message: `${inq.name}様の見積りを作成しました。見積り管理に移動してください。` })}><RequestQuoteIcon fontSize="small" /></IconButton>
                       </Tooltip>
                     )}
                     {inq.status !== "closed" && (
                       <Tooltip title="クローズ">
-                        <IconButton size="small"><CheckIcon fontSize="small" /></IconButton>
+                        <IconButton size="small" onClick={() => setSnackbar({ open: true, message: `${inq.id} をクローズしました。` })}><CheckIcon fontSize="small" /></IconButton>
                       </Tooltip>
                     )}
                   </TableCell>
@@ -110,14 +111,18 @@ export default function InquiriesPage() {
                 <Typography variant="caption" sx={{ color: "#999" }}>社内メモ</Typography>
                 <TextField fullWidth multiline rows={2} placeholder="メモを入力..." defaultValue={selected.notes} sx={{ mt: 0.5, mb: 2 }} />
                 <Box sx={{ display: "flex", gap: 1.5 }}>
-                  <Button variant="contained" sx={{ bgcolor: "#2D3A3A", "&:hover": { bgcolor: "#1A2424" }, borderRadius: 50 }}>見積り作成</Button>
-                  <Button variant="outlined" sx={{ borderColor: "#E8E5E0", color: "#6B6B6B", borderRadius: 50 }}>クローズ</Button>
+                  <Button variant="contained" sx={{ bgcolor: "#2D3A3A", "&:hover": { bgcolor: "#1A2424" }, borderRadius: 50 }} onClick={() => { setModalOpen(false); setSnackbar({ open: true, message: `${selected.name}様の見積りを作成しました。` }); }}>見積り作成</Button>
+                  <Button variant="outlined" sx={{ borderColor: "#E8E5E0", color: "#6B6B6B", borderRadius: 50 }} onClick={() => { setModalOpen(false); setSnackbar({ open: true, message: `${selected.id} をクローズしました。` }); }}>クローズ</Button>
                 </Box>
               </Box>
             </>
           )}
         </Box>
       </Modal>
+
+      <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={() => setSnackbar({ ...snackbar, open: false })} anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
+        <Alert severity="success" onClose={() => setSnackbar({ ...snackbar, open: false })}>{snackbar.message}</Alert>
+      </Snackbar>
     </>
   );
 }

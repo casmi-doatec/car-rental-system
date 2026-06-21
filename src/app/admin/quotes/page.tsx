@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Typography, Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Chip, IconButton, Tooltip, Button, Modal, Grid, Divider, TextField, MenuItem } from "@mui/material";
+import { Typography, Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Chip, IconButton, Tooltip, Button, Modal, Grid, Divider, TextField, MenuItem, Snackbar, Alert } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import SendIcon from "@mui/icons-material/Send";
@@ -29,6 +29,7 @@ export default function QuotesPage() {
   const [selected, setSelected] = useState<typeof demoQuotes[0] | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "" });
 
   return (
     <>
@@ -66,8 +67,8 @@ export default function QuotesPage() {
                   <TableCell sx={{ fontSize: "0.8rem" }}>{qt.createdAt}</TableCell>
                   <TableCell>
                     <Tooltip title="詳細"><IconButton size="small" onClick={() => { setSelected(qt); setModalOpen(true); }}><VisibilityIcon fontSize="small" /></IconButton></Tooltip>
-                    {qt.status === "draft" && <Tooltip title="送信"><IconButton size="small" color="primary"><SendIcon fontSize="small" /></IconButton></Tooltip>}
-                    {(qt.status === "draft" || qt.status === "sent") && <Tooltip title="編集"><IconButton size="small"><EditIcon fontSize="small" /></IconButton></Tooltip>}
+                    {qt.status === "draft" && <Tooltip title="送信"><IconButton size="small" color="primary" onClick={() => setSnackbar({ open: true, message: `${qt.customer}様に見積り(${qt.id})をメール送信しました。` })}><SendIcon fontSize="small" /></IconButton></Tooltip>}
+                    {(qt.status === "draft" || qt.status === "sent") && <Tooltip title="編集"><IconButton size="small" onClick={() => { setSelected(qt); setModalOpen(true); }}><EditIcon fontSize="small" /></IconButton></Tooltip>}
                   </TableCell>
                 </TableRow>
               ))}
@@ -99,8 +100,8 @@ export default function QuotesPage() {
                 <Divider sx={{ my: 2 }} />
                 <Typography variant="body2" sx={{ color: "#6B6B6B", mb: 2 }}>見積りURL: /quote/{selected.id}</Typography>
                 <Box sx={{ display: "flex", gap: 1.5 }}>
-                  {selected.status === "draft" && <Button variant="contained" startIcon={<SendIcon />} sx={{ bgcolor: "#2D3A3A", "&:hover": { bgcolor: "#1A2424" }, borderRadius: 50 }}>メールで送信</Button>}
-                  <Button variant="outlined" sx={{ borderColor: "#E8E5E0", color: "#6B6B6B", borderRadius: 50 }}>PDF表示</Button>
+                  {selected.status === "draft" && <Button variant="contained" startIcon={<SendIcon />} sx={{ bgcolor: "#2D3A3A", "&:hover": { bgcolor: "#1A2424" }, borderRadius: 50 }} onClick={() => { setModalOpen(false); setSnackbar({ open: true, message: `${selected.customer}様にメール送信しました。` }); }}>メールで送信</Button>}
+                  <Button variant="outlined" sx={{ borderColor: "#E8E5E0", color: "#6B6B6B", borderRadius: 50 }} onClick={() => setSnackbar({ open: true, message: "PDFを生成しました。" })}>PDF表示</Button>
                 </Box>
               </Box>
             </>
@@ -124,12 +125,16 @@ export default function QuotesPage() {
               <Grid size={{ xs: 6 }}><TextField fullWidth type="date" label="返却日" slotProps={{ inputLabel: { shrink: true } }} /></Grid>
             </Grid>
             <Box sx={{ display: "flex", gap: 1.5, mt: 3 }}>
-              <Button variant="contained" sx={{ bgcolor: "#2D3A3A", "&:hover": { bgcolor: "#1A2424" }, borderRadius: 50 }}>下書き保存</Button>
-              <Button variant="contained" startIcon={<SendIcon />} sx={{ bgcolor: "#B8363B", "&:hover": { bgcolor: "#9C2D31" }, borderRadius: 50 }}>作成して送信</Button>
+              <Button variant="contained" sx={{ bgcolor: "#2D3A3A", "&:hover": { bgcolor: "#1A2424" }, borderRadius: 50 }} onClick={() => { setCreateOpen(false); setSnackbar({ open: true, message: "見積りを下書き保存しました。" }); }}>下書き保存</Button>
+              <Button variant="contained" startIcon={<SendIcon />} sx={{ bgcolor: "#B8363B", "&:hover": { bgcolor: "#9C2D31" }, borderRadius: 50 }} onClick={() => { setCreateOpen(false); setSnackbar({ open: true, message: "見積りを作成し、メール送信しました。" }); }}>作成して送信</Button>
             </Box>
           </Box>
         </Box>
       </Modal>
+
+      <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={() => setSnackbar({ ...snackbar, open: false })} anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
+        <Alert severity="success" onClose={() => setSnackbar({ ...snackbar, open: false })}>{snackbar.message}</Alert>
+      </Snackbar>
     </>
   );
 }
