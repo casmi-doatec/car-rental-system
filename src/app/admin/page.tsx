@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Typography,
   Grid,
@@ -44,6 +44,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import CloseIcon from "@mui/icons-material/Close";
 import { useLanguage } from "@/context/LanguageContext";
 import { bookings, vehicles, customers, scheduleEvents, Booking } from "@/data/demo";
+import jsPDF from "jspdf";
 
 const statusColors: Record<string, "warning" | "info" | "success" | "default" | "error"> = {
   pending: "warning",
@@ -90,6 +91,82 @@ export default function AdminPage() {
   const [activeSection, setActiveSection] = useState(0);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+
+  // Persist active section in URL hash
+  useEffect(() => {
+    const hash = window.location.hash.replace("#", "");
+    const sectionMap: Record<string, number> = {
+      dashboard: 0, bookings: 1, vehicles: 2, customers: 3, schedule: 4, documents: 5,
+    };
+    if (hash && sectionMap[hash] !== undefined) {
+      setActiveSection(sectionMap[hash]);
+    }
+  }, []);
+
+  const handleSectionChange = (id: number) => {
+    setActiveSection(id);
+    const hashMap = ["dashboard", "bookings", "vehicles", "customers", "schedule", "documents"];
+    window.location.hash = hashMap[id];
+  };
+
+  // PDF generation
+  const generatePDF = useCallback((booking: Booking) => {
+    const doc = new jsPDF();
+    const vehicle = vehicles.find((v) => v.id === booking.vehicleId);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(20);
+    doc.text("COMPASS RENTAL CAR", 20, 25);
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text("Reservation Confirmation / Booking ID: " + booking.id, 20, 35);
+
+    doc.setDrawColor(200);
+    doc.line(20, 40, 190, 40);
+
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("Customer Information", 20, 52);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text("Name: " + booking.customerName, 20, 62);
+    doc.text("Email: " + booking.customerEmail, 20, 70);
+    doc.text("Phone: " + booking.customerPhone, 20, 78);
+
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("Vehicle Information", 20, 95);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text("Vehicle: " + (vehicle?.name || booking.vehicleId), 20, 105);
+    doc.text("Category: " + (vehicle?.category || "-"), 20, 113);
+    doc.text("Seats: " + (vehicle?.seats || "-"), 20, 121);
+    doc.text("Transmission: " + (vehicle?.transmission || "-"), 20, 129);
+
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("Rental Details", 20, 146);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text("Pick-up Date: " + booking.startDate, 20, 156);
+    doc.text("Return Date: " + booking.endDate, 20, 164);
+    doc.text("Status: " + statusLabels[booking.status], 20, 172);
+
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("Total: JPY " + booking.totalAmount.toLocaleString(), 20, 190);
+
+    doc.setDrawColor(200);
+    doc.line(20, 200, 190, 200);
+
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+    doc.text("COMPASS Co., Ltd. | Okinawa, Japan | info@compass-rental.jp", 20, 210);
+    doc.text("Generated: " + new Date().toLocaleDateString("ja-JP"), 20, 217);
+
+    doc.save(`COMPASS_Booking_${booking.id}.pdf`);
+  }, []);
 
   // Pagination states
   const [bookingPage, setBookingPage] = useState(0);
@@ -156,7 +233,7 @@ export default function AdminPage() {
             <ListItem key={item.id} disablePadding sx={{ mb: 0.5 }}>
               <ListItemButton
                 selected={activeSection === item.id}
-                onClick={() => setActiveSection(item.id)}
+                onClick={() => handleSectionChange(item.id)}
                 sx={{
                   borderRadius: 2,
                   "&.Mui-selected": { bgcolor: "rgba(43,76,126,0.4)", "&:hover": { bgcolor: "rgba(43,76,126,0.5)" } },
@@ -190,7 +267,7 @@ export default function AdminPage() {
         <Box sx={{ display: { md: "none" }, mb: 2 }}>
           <Tabs
             value={activeSection}
-            onChange={(_, v) => setActiveSection(v)}
+            onChange={(_, v) => handleSectionChange(v)}
             variant="scrollable"
             scrollButtons="auto"
           >
@@ -354,7 +431,7 @@ export default function AdminPage() {
                             </IconButton>
                           </Tooltip>
                           <Tooltip title="PDF作成">
-                            <IconButton size="small"><PictureAsPdfIcon fontSize="small" /></IconButton>
+                            <IconButton size="small" onClick={() => generatePDF(booking)}><PictureAsPdfIcon fontSize="small" /></IconButton>
                           </Tooltip>
                         </TableCell>
                       </TableRow>
@@ -617,7 +694,7 @@ export default function AdminPage() {
                 </Paper>
 
                 <Box sx={{ display: "flex", gap: 1.5 }}>
-                  <Button variant="contained" fullWidth sx={{ bgcolor: "#2B4C7E", "&:hover": { bgcolor: "#1A3154" } }}>
+                  <Button variant="contained" fullWidth sx={{ bgcolor: "#2B4C7E", "&:hover": { bgcolor: "#1A3154" } }} onClick={() => { generatePDF(selectedBooking!); }}>
                     PDF作成
                   </Button>
                   <Button variant="outlined" fullWidth sx={{ borderColor: "#2B4C7E", color: "#2B4C7E" }}>

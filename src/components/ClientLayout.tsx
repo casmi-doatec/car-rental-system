@@ -1,5 +1,6 @@
 "use client";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import { usePathname } from "next/navigation";
 import { LanguageProvider } from "@/context/LanguageContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -33,6 +34,9 @@ const theme = createTheme({
 });
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isAdmin = pathname.startsWith("/admin");
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -40,7 +44,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <div className="min-h-screen flex flex-col bg-[#FAF8F5]">
           <Navbar />
           <main className="flex-1">{children}</main>
-          <Footer />
+          {!isAdmin && <Footer />}
         </div>
       </LanguageProvider>
     </ThemeProvider>
