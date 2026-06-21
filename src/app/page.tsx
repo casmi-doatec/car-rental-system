@@ -36,7 +36,6 @@ import { vehicles } from "@/data/demo";
 
 const testimonials = [
   { name: "Emily R.", country: "USA", rating: 5, text: "Excellent service! The car was spotless and the staff spoke perfect English. Made our Okinawa trip so much easier.", avatar: "E" },
-  { name: "Kim S.", country: "Korea", rating: 5, text: "다국어 지원이 정말 편리했어요. 차량 상태도 좋고 가격도 합리적이었습니다. 다음에도 이용하겠습니다.", avatar: "K" },
   { name: "Wang L.", country: "China", rating: 4, text: "车辆很新很干净，服务人员态度很好。中文沟通完全没有问题，推荐给来冲绳旅游的朋友。", avatar: "W" },
   { name: "Suzuki T.", country: "Japan", rating: 5, text: "車がとても綺麗で、料金も分かりやすかったです。外国の友人にも安心して勧められるサービスです。", avatar: "S" },
 ];
