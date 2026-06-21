@@ -35,7 +35,7 @@ export default function Navbar() {
   const navLinks = [
     { href: "/", label: t("nav.home") },
     { href: "/vehicles", label: t("nav.vehicles") },
-    { href: "/booking", label: t("nav.booking") },
+    { href: "/availability", label: "空車確認" },
     { href: "/contact", label: t("nav.contact") },
     { href: "/admin", label: t("nav.admin") },
   ];
