@@ -120,52 +120,48 @@ export default function AdminPage() {
 
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text("Reservation Confirmation / Booking ID: " + booking.id, 20, 35);
+    doc.text("Reservation / Booking ID: " + booking.id, 20, 35);
 
     doc.setDrawColor(200);
     doc.line(20, 40, 190, 40);
 
     doc.setFontSize(12);
     doc.setFont("helvetica", "bold");
-    doc.text("Customer Information", 20, 52);
+    doc.text("Customer", 20, 52);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.text("Name: " + booking.customerName, 20, 62);
-    doc.text("Email: " + booking.customerEmail, 20, 70);
-    doc.text("Phone: " + booking.customerPhone, 20, 78);
+    doc.text(booking.customerName, 20, 62);
+    doc.text(booking.customerEmail, 20, 70);
+    doc.text(booking.customerPhone, 20, 78);
 
     doc.setFontSize(12);
     doc.setFont("helvetica", "bold");
-    doc.text("Vehicle Information", 20, 95);
+    doc.text("Vehicle", 20, 95);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.text("Vehicle: " + (vehicle?.name || booking.vehicleId), 20, 105);
-    doc.text("Category: " + (vehicle?.category || "-"), 20, 113);
-    doc.text("Seats: " + (vehicle?.seats || "-"), 20, 121);
-    doc.text("Transmission: " + (vehicle?.transmission || "-"), 20, 129);
+    doc.text(vehicle?.name || booking.vehicleId, 20, 105);
+    doc.text((vehicle?.category || "-") + " / " + (vehicle?.seats || "-") + " seats / " + (vehicle?.transmission || "-"), 20, 113);
 
     doc.setFontSize(12);
     doc.setFont("helvetica", "bold");
-    doc.text("Rental Details", 20, 146);
+    doc.text("Rental Period", 20, 130);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.text("Pick-up Date: " + booking.startDate, 20, 156);
-    doc.text("Return Date: " + booking.endDate, 20, 164);
-    doc.text("Status: " + statusLabels[booking.status], 20, 172);
+    doc.text(booking.startDate + "  ~  " + booking.endDate, 20, 140);
 
     doc.setFontSize(14);
     doc.setFont("helvetica", "bold");
-    doc.text("Total: JPY " + booking.totalAmount.toLocaleString(), 20, 190);
+    doc.text("Total: JPY " + booking.totalAmount.toLocaleString(), 20, 158);
 
     doc.setDrawColor(200);
-    doc.line(20, 200, 190, 200);
+    doc.line(20, 168, 190, 168);
 
     doc.setFontSize(8);
     doc.setFont("helvetica", "normal");
-    doc.text("COMPASS Co., Ltd. | Okinawa, Japan | info@compass-rental.jp", 20, 210);
-    doc.text("Generated: " + new Date().toLocaleDateString("ja-JP"), 20, 217);
+    doc.text("COMPASS Co., Ltd. | Okinawa, Japan | info@compass-rental.jp", 20, 178);
+    doc.text(new Date().toLocaleDateString("ja-JP"), 20, 185);
 
-    doc.save(`COMPASS_Booking_${booking.id}.pdf`);
+    doc.save(`COMPASS_${booking.id}.pdf`);
   }, []);
 
   // Pagination states

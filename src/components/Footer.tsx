@@ -101,7 +101,7 @@ export default function Footer() {
 
         <Divider sx={{ borderColor: "rgba(255,255,255,0.08)", my: 4 }} />
         <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.25)", textAlign: "center", fontSize: "0.75rem", letterSpacing: "0.03em" }}>
-          &copy; 2026 株式会社COMPASS All rights reserved.
+          &copy; 2026 株式会社COMPASS 無断転載禁止
         </Typography>
       </Container>
     </Box>
