@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Typography, Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Chip, IconButton, Tooltip, Button, Modal, Grid, Divider, TextField, MenuItem, Snackbar, Alert } from "@mui/material";
+import { vehicles } from "@/data/demo";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import SendIcon from "@mui/icons-material/Send";
@@ -30,6 +31,12 @@ export default function QuotesPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
+  const [newVehicleId, setNewVehicleId] = useState("");
+  const [newPickup, setNewPickup] = useState("");
+  const [newReturn, setNewReturn] = useState("");
+  const newVehicle = vehicles.find((v) => v.id === newVehicleId);
+  const newDays = newPickup && newReturn ? Math.max(0, Math.ceil((new Date(newReturn).getTime() - new Date(newPickup).getTime()) / 86400000)) : 0;
+  const newTotal = newVehicle ? newDays * newVehicle.pricePerDay : 0;
 
   return (
     <>
@@ -120,10 +127,21 @@ export default function QuotesPage() {
             <Grid container spacing={2}>
               <Grid size={{ xs: 12 }}><TextField fullWidth label="顧客名" /></Grid>
               <Grid size={{ xs: 12 }}><TextField fullWidth label="メールアドレス" /></Grid>
-              <Grid size={{ xs: 12 }}><TextField fullWidth select label="車両" defaultValue=""><MenuItem value="">選択してください</MenuItem>{["Toyota Aqua", "Mazda CX-5", "Toyota RAV4", "Toyota Alphard"].map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>)}</TextField></Grid>
-              <Grid size={{ xs: 6 }}><TextField fullWidth type="date" label="受取日" slotProps={{ inputLabel: { shrink: true } }} /></Grid>
-              <Grid size={{ xs: 6 }}><TextField fullWidth type="date" label="返却日" slotProps={{ inputLabel: { shrink: true } }} /></Grid>
+              <Grid size={{ xs: 12 }}>
+                <TextField fullWidth select label="車両" value={newVehicleId} onChange={(e) => setNewVehicleId(e.target.value)}>
+                  <MenuItem value="">選択してください</MenuItem>
+                  {vehicles.filter((v) => v.available).map((v) => <MenuItem key={v.id} value={v.id}>{v.name} (¥{v.pricePerDay.toLocaleString()}/日)</MenuItem>)}
+                </TextField>
+              </Grid>
+              <Grid size={{ xs: 6 }}><TextField fullWidth type="date" label="受取日" value={newPickup} onChange={(e) => setNewPickup(e.target.value)} slotProps={{ inputLabel: { shrink: true } }} /></Grid>
+              <Grid size={{ xs: 6 }}><TextField fullWidth type="date" label="返却日" value={newReturn} onChange={(e) => setNewReturn(e.target.value)} slotProps={{ inputLabel: { shrink: true } }} /></Grid>
             </Grid>
+            {newTotal > 0 && (
+              <Box sx={{ mt: 2, p: 2, bgcolor: "#FAFAF7", borderRadius: 1, border: "1px solid #E8E5E0" }}>
+                <Typography variant="body2" sx={{ color: "#6B6B6B" }}>{newVehicle?.name} x {newDays}日間</Typography>
+                <Typography sx={{ fontWeight: 700, color: "#B8363B", fontSize: "1.3rem" }}>合計: ¥{newTotal.toLocaleString()}</Typography>
+              </Box>
+            )}
             <Box sx={{ display: "flex", gap: 1.5, mt: 3 }}>
               <Button variant="contained" sx={{ bgcolor: "#2D3A3A", "&:hover": { bgcolor: "#1A2424" }, borderRadius: 50 }} onClick={() => { setCreateOpen(false); setSnackbar({ open: true, message: "見積りを下書き保存しました。" }); }}>下書き保存</Button>
               <Button variant="contained" startIcon={<SendIcon />} sx={{ bgcolor: "#B8363B", "&:hover": { bgcolor: "#9C2D31" }, borderRadius: 50 }} onClick={() => { setCreateOpen(false); setSnackbar({ open: true, message: "見積りを作成し、メール送信しました。" }); }}>作成して送信</Button>

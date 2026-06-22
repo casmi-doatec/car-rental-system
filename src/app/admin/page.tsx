@@ -140,6 +140,30 @@ export default function AdminDashboard() {
           </Paper>
         </Grid>
       </Grid>
+
+      {/* Email/Notification Log */}
+      <Paper sx={{ borderRadius: 2, border: "1px solid #E8E5E0", mt: 3, overflow: "hidden" }}>
+        <Box sx={{ p: 2.5, borderBottom: "1px solid #E8E5E0" }}>
+          <Typography sx={{ fontWeight: 600 }}>最近の通知・メールログ</Typography>
+        </Box>
+        <Box sx={{ p: 0 }}>
+          {[
+            { time: "14:32", type: "メール送信", message: "田中 健太様に見積書をメール送信しました", status: "送信済" },
+            { time: "14:15", type: "スタッフ通知", message: "新規問い合わせ(INQ-003)が届きました", status: "確認済" },
+            { time: "13:50", type: "メール送信", message: "佐藤 美咲様に予約確認メールを送信しました", status: "送信済" },
+            { time: "12:30", type: "スタッフ通知", message: "見積り(QT-2026-002)が承認されました", status: "確認済" },
+            { time: "11:00", type: "メール送信", message: "中村 蓮様に注文書PDFをメール送信しました", status: "送信済" },
+            { time: "10:20", type: "スタッフ通知", message: "予約フォーム(BK-2026-0042)が提出されました", status: "未確認" },
+          ].map((log, idx) => (
+            <Box key={idx} sx={{ display: "flex", alignItems: "center", gap: 2, px: 2.5, py: 1.5, borderBottom: idx < 5 ? "1px solid #F0F0F0" : "none" }}>
+              <Typography variant="caption" sx={{ color: "#999", minWidth: 40 }}>{log.time}</Typography>
+              <Chip label={log.type} size="small" variant="outlined" sx={{ minWidth: 80 }} />
+              <Typography variant="body2" sx={{ flexGrow: 1, color: "#2D2D2D" }}>{log.message}</Typography>
+              <Chip label={log.status} size="small" color={log.status === "未確認" ? "warning" : "default"} />
+            </Box>
+          ))}
+        </Box>
+      </Paper>
     </>
   );
 }
