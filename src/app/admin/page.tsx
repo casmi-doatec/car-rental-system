@@ -74,22 +74,35 @@ export default function AdminDashboard() {
     { name: "バン", value: vehicles.filter((v) => v.category === "バン").length, color: "#f59e0b" },
   ];
 
-  // Bar chart data - monthly revenue (demo)
-  const monthlyRevenue = [
-    { month: "1月", 売上: 280000 },
-    { month: "2月", 売上: 320000 },
-    { month: "3月", 売上: 450000 },
-    { month: "4月", 売上: 520000 },
-    { month: "5月", 売上: 680000 },
-    { month: "6月", 売上: totalRevenue },
-  ];
+  // Bar chart - revenue per vehicle (from actual bookings)
+  const revenueByVehicle: Record<string, number> = {};
+  bookings.forEach((b) => {
+    const name = getVehicleName(b.vehicleId);
+    revenueByVehicle[name] = (revenueByVehicle[name] || 0) + b.totalAmount;
+  });
+  const vehicleRevenue = Object.entries(revenueByVehicle)
+    .map(([name, amount]) => ({ name: name.length > 10 ? name.slice(0, 10) + "..." : name, 売上: amount }))
+    .sort((a, b) => b.売上 - a.売上)
+    .slice(0, 8);
 
-  // Line chart data - weekly bookings (demo)
-  const weeklyBookings = [
-    { week: "第1週", 予約数: 8, 問い合わせ: 12 },
-    { week: "第2週", 予約数: 12, 問い合わせ: 15 },
-    { week: "第3週", 予約数: 10, 問い合わせ: 18 },
-    { week: "第4週", 予約数: 15, 問い合わせ: 20 },
+  // Line chart - bookings by date (from actual data)
+  const bookingsByDate: Record<string, { 予約数: number; 金額: number }> = {};
+  bookings.forEach((b) => {
+    const d = b.createdAt;
+    if (!bookingsByDate[d]) bookingsByDate[d] = { 予約数: 0, 金額: 0 };
+    bookingsByDate[d].予約数 += 1;
+    bookingsByDate[d].金額 += b.totalAmount;
+  });
+  const dailyBookings = Object.entries(bookingsByDate)
+    .map(([date, data]) => ({ date: date.slice(5), ...data }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  // Price range distribution (from actual vehicles)
+  const priceRanges = [
+    { range: "〜5千", count: vehicles.filter((v) => v.pricePerDay <= 5000).length },
+    { range: "5千〜1万", count: vehicles.filter((v) => v.pricePerDay > 5000 && v.pricePerDay <= 10000).length },
+    { range: "1万〜1.5万", count: vehicles.filter((v) => v.pricePerDay > 10000 && v.pricePerDay <= 15000).length },
+    { range: "1.5万〜", count: vehicles.filter((v) => v.pricePerDay > 15000).length },
   ];
 
   return (
@@ -116,12 +129,12 @@ export default function AdminDashboard() {
         {/* Monthly Revenue Bar Chart */}
         <Grid size={{ xs: 12, md: 8 }}>
           <Paper sx={{ borderRadius: 2, border: "1px solid #E8E5E0", p: 3 }}>
-            <Typography sx={{ fontWeight: 600, mb: 2 }}>月別売上推移</Typography>
+            <Typography sx={{ fontWeight: 600, mb: 2 }}>車両別売上</Typography>
             <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={monthlyRevenue}>
+              <BarChart data={vehicleRevenue}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E8E5E0" />
-                <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `¥${(v / 10000).toFixed(0)}万`} />
+                <XAxis dataKey="name" tick={{ fontSize: 10 }} angle={-20} textAnchor="end" height={50} />
+                <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `¥${(v / 10000).toFixed(0)}万`} />
                 <ReTooltip formatter={(value) => [`¥${Number(value).toLocaleString()}`, "売上"]} />
                 <Bar dataKey="売上" fill="#2D3A3A" radius={[4, 4, 0, 0]} />
               </BarChart>
@@ -152,16 +165,17 @@ export default function AdminDashboard() {
         {/* Weekly Bookings Line Chart */}
         <Grid size={{ xs: 12, md: 8 }}>
           <Paper sx={{ borderRadius: 2, border: "1px solid #E8E5E0", p: 3 }}>
-            <Typography sx={{ fontWeight: 600, mb: 2 }}>週別予約・問い合わせ推移</Typography>
+            <Typography sx={{ fontWeight: 600, mb: 2 }}>日別予約件数・売上推移</Typography>
             <ResponsiveContainer width="100%" height={260}>
-              <LineChart data={weeklyBookings}>
+              <LineChart data={dailyBookings}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E8E5E0" />
-                <XAxis dataKey="week" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} />
+                <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+                <YAxis yAxisId="left" tick={{ fontSize: 11 }} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} tickFormatter={(v) => `¥${(v / 10000).toFixed(0)}万`} />
                 <ReTooltip />
                 <Legend />
-                <Line type="monotone" dataKey="予約数" stroke="#B8363B" strokeWidth={2} dot={{ r: 4 }} />
-                <Line type="monotone" dataKey="問い合わせ" stroke="#2D3A3A" strokeWidth={2} dot={{ r: 4 }} />
+                <Line yAxisId="left" type="monotone" dataKey="予約数" stroke="#B8363B" strokeWidth={2} dot={{ r: 4 }} />
+                <Line yAxisId="right" type="monotone" dataKey="金額" stroke="#2D3A3A" strokeWidth={2} dot={{ r: 4 }} />
               </LineChart>
             </ResponsiveContainer>
           </Paper>
@@ -170,16 +184,25 @@ export default function AdminDashboard() {
         {/* Vehicle Category Pie Chart */}
         <Grid size={{ xs: 12, md: 4 }}>
           <Paper sx={{ borderRadius: 2, border: "1px solid #E8E5E0", p: 3 }}>
-            <Typography sx={{ fontWeight: 600, mb: 2 }}>車両カテゴリ構成</Typography>
-            <ResponsiveContainer width="100%" height={260}>
-              <PieChart>
-                <Pie data={categoryPie} cx="50%" cy="50%" outerRadius={85} paddingAngle={3} dataKey="value" label={({ name, value }) => `${name}: ${value}台`}>
-                  {categoryPie.map((entry, i) => (
-                    <Cell key={i} fill={entry.color} />
-                  ))}
-                </Pie>
+            <Typography sx={{ fontWeight: 600, mb: 2 }}>車両カテゴリ・料金帯</Typography>
+            <Box sx={{ mb: 2 }}>
+              <ResponsiveContainer width="100%" height={110}>
+                <PieChart>
+                  <Pie data={categoryPie} cx="50%" cy="50%" outerRadius={45} paddingAngle={3} dataKey="value" label={({ name, value }) => `${name}: ${value}`}>
+                    {categoryPie.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                  </Pie>
+                  <ReTooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </Box>
+            <Typography variant="caption" sx={{ fontWeight: 600, color: "#6B6B6B", display: "block", mb: 1 }}>料金帯別台数</Typography>
+            <ResponsiveContainer width="100%" height={110}>
+              <BarChart data={priceRanges} layout="vertical">
+                <XAxis type="number" tick={{ fontSize: 10 }} />
+                <YAxis type="category" dataKey="range" tick={{ fontSize: 10 }} width={65} />
                 <ReTooltip />
-              </PieChart>
+                <Bar dataKey="count" fill="#B8363B" radius={[0, 4, 4, 0]} />
+              </BarChart>
             </ResponsiveContainer>
           </Paper>
         </Grid>
