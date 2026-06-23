@@ -13,18 +13,28 @@ import {
   TableHead,
   TableRow,
   Chip,
-  IconButton,
-  Tooltip,
   LinearProgress,
 } from "@mui/material";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
-import PeopleIcon from "@mui/icons-material/People";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import TodayIcon from "@mui/icons-material/Today";
 import { bookings, vehicles, customers } from "@/data/demo";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as ReTooltip,
+  ResponsiveContainer,
+  Legend,
+  LineChart,
+  Line,
+} from "recharts";
 
 const statusLabels: Record<string, string> = { pending: "保留中", confirmed: "確認済", active: "利用中", completed: "完了", cancelled: "キャンセル" };
 const statusColors: Record<string, "warning" | "info" | "success" | "default" | "error"> = { pending: "warning", confirmed: "info", active: "success", completed: "default", cancelled: "error" };
@@ -49,6 +59,39 @@ export default function AdminDashboard() {
   const recentBookings = [...bookings].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 7);
   const getVehicleName = (id: string) => vehicles.find((v) => v.id === id)?.name || id;
 
+  // Pie chart data - booking status
+  const pieData = [
+    { name: "保留中", value: pendingBookings, color: "#f59e0b" },
+    { name: "確認済", value: bookings.filter((b) => b.status === "confirmed").length, color: "#3b82f6" },
+    { name: "利用中", value: activeRentals, color: "#10b981" },
+    { name: "完了", value: completedBookings, color: "#6B6B6B" },
+  ];
+
+  // Pie chart data - vehicle category
+  const categoryPie = [
+    { name: "コンパクト", value: vehicles.filter((v) => v.category === "コンパクト").length, color: "#3b82f6" },
+    { name: "SUV", value: vehicles.filter((v) => v.category === "SUV").length, color: "#10b981" },
+    { name: "バン", value: vehicles.filter((v) => v.category === "バン").length, color: "#f59e0b" },
+  ];
+
+  // Bar chart data - monthly revenue (demo)
+  const monthlyRevenue = [
+    { month: "1月", 売上: 280000 },
+    { month: "2月", 売上: 320000 },
+    { month: "3月", 売上: 450000 },
+    { month: "4月", 売上: 520000 },
+    { month: "5月", 売上: 680000 },
+    { month: "6月", 売上: totalRevenue },
+  ];
+
+  // Line chart data - weekly bookings (demo)
+  const weeklyBookings = [
+    { week: "第1週", 予約数: 8, 問い合わせ: 12 },
+    { week: "第2週", 予約数: 12, 問い合わせ: 15 },
+    { week: "第3週", 予約数: 10, 問い合わせ: 18 },
+    { week: "第4週", 予約数: 15, 問い合わせ: 20 },
+  ];
+
   return (
     <>
       <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>ダッシュボード</Typography>
@@ -68,6 +111,81 @@ export default function AdminDashboard() {
         ))}
       </Grid>
 
+      {/* Charts Row */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        {/* Monthly Revenue Bar Chart */}
+        <Grid size={{ xs: 12, md: 8 }}>
+          <Paper sx={{ borderRadius: 2, border: "1px solid #E8E5E0", p: 3 }}>
+            <Typography sx={{ fontWeight: 600, mb: 2 }}>月別売上推移</Typography>
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart data={monthlyRevenue}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#E8E5E0" />
+                <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `¥${(v / 10000).toFixed(0)}万`} />
+                <ReTooltip formatter={(value) => [`¥${Number(value).toLocaleString()}`, "売上"]} />
+                <Bar dataKey="売上" fill="#2D3A3A" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </Paper>
+        </Grid>
+
+        {/* Booking Status Pie Chart */}
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Paper sx={{ borderRadius: 2, border: "1px solid #E8E5E0", p: 3 }}>
+            <Typography sx={{ fontWeight: 600, mb: 2 }}>予約ステータス内訳</Typography>
+            <ResponsiveContainer width="100%" height={280}>
+              <PieChart>
+                <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value" label={({ name, value }) => `${name}: ${value}`}>
+                  {pieData.map((entry, i) => (
+                    <Cell key={i} fill={entry.color} />
+                  ))}
+                </Pie>
+                <ReTooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </Paper>
+        </Grid>
+      </Grid>
+
+      {/* Second Charts Row */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        {/* Weekly Bookings Line Chart */}
+        <Grid size={{ xs: 12, md: 8 }}>
+          <Paper sx={{ borderRadius: 2, border: "1px solid #E8E5E0", p: 3 }}>
+            <Typography sx={{ fontWeight: 600, mb: 2 }}>週別予約・問い合わせ推移</Typography>
+            <ResponsiveContainer width="100%" height={260}>
+              <LineChart data={weeklyBookings}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#E8E5E0" />
+                <XAxis dataKey="week" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <ReTooltip />
+                <Legend />
+                <Line type="monotone" dataKey="予約数" stroke="#B8363B" strokeWidth={2} dot={{ r: 4 }} />
+                <Line type="monotone" dataKey="問い合わせ" stroke="#2D3A3A" strokeWidth={2} dot={{ r: 4 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </Paper>
+        </Grid>
+
+        {/* Vehicle Category Pie Chart */}
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Paper sx={{ borderRadius: 2, border: "1px solid #E8E5E0", p: 3 }}>
+            <Typography sx={{ fontWeight: 600, mb: 2 }}>車両カテゴリ構成</Typography>
+            <ResponsiveContainer width="100%" height={260}>
+              <PieChart>
+                <Pie data={categoryPie} cx="50%" cy="50%" outerRadius={85} paddingAngle={3} dataKey="value" label={({ name, value }) => `${name}: ${value}台`}>
+                  {categoryPie.map((entry, i) => (
+                    <Cell key={i} fill={entry.color} />
+                  ))}
+                </Pie>
+                <ReTooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </Paper>
+        </Grid>
+      </Grid>
+
+      {/* Tables Row */}
       <Grid container spacing={3}>
         {/* Recent bookings */}
         <Grid size={{ xs: 12, md: 8 }}>
@@ -141,7 +259,7 @@ export default function AdminDashboard() {
         </Grid>
       </Grid>
 
-      {/* Email/Notification Log */}
+      {/* Notification Log */}
       <Paper sx={{ borderRadius: 2, border: "1px solid #E8E5E0", mt: 3, overflow: "hidden" }}>
         <Box sx={{ p: 2.5, borderBottom: "1px solid #E8E5E0" }}>
           <Typography sx={{ fontWeight: 600 }}>最近の通知・メールログ</Typography>
