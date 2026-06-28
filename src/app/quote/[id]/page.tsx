@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
+import Link from "next/link";
 import { vehicles } from "@/data/demo";
 
 // Simulated quote data
@@ -54,10 +55,13 @@ export default function QuotePage() {
         <Typography sx={{ color: "#6B6B6B", mb: 3, lineHeight: 1.8 }}>
           ありがとうございます。担当者より予約フォームのご案内をメールでお送りいたします。
         </Typography>
-        <Alert severity="success" sx={{ textAlign: "left", borderRadius: 2 }}>
+        <Alert severity="success" sx={{ textAlign: "left", borderRadius: 2, mb: 3 }}>
           <Typography variant="body2">見積番号: {quoteId}</Typography>
           <Typography variant="body2">次のステップ: 予約フォームにご記入ください。</Typography>
         </Alert>
+        <Button component={Link} href={`/booking-form?vehicle=${quote.vehicleId}`} variant="contained" size="large" sx={{ bgcolor: "#B8363B", "&:hover": { bgcolor: "#9C2D31" }, borderRadius: 50, px: 5 }}>
+          予約フォームに進む
+        </Button>
       </Container>
     );
   }

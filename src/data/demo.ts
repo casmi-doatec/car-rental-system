@@ -1,3 +1,22 @@
+export interface RentalOption {
+  id: string;
+  name: string;
+  pricePerDay: number;
+  description: string;
+  available: boolean;
+}
+
+export const rentalOptions: RentalOption[] = [
+  { id: "opt1", name: "BBQコンロセット", pricePerDay: 2000, description: "コンロ、網、トング、炭付き", available: true },
+  { id: "opt2", name: "テント（4人用）", pricePerDay: 3000, description: "設営簡単なドーム型テント", available: true },
+  { id: "opt3", name: "チャイルドシート", pricePerDay: 500, description: "1歳〜4歳対応", available: true },
+  { id: "opt4", name: "ジュニアシート", pricePerDay: 500, description: "4歳〜10歳対応", available: true },
+  { id: "opt5", name: "ポータブルWi-Fi", pricePerDay: 800, description: "4G LTE 無制限プラン", available: true },
+  { id: "opt6", name: "クーラーボックス", pricePerDay: 1000, description: "大型30L", available: true },
+  { id: "opt7", name: "シュノーケルセット", pricePerDay: 1500, description: "マスク、シュノーケル、フィン", available: true },
+  { id: "opt8", name: "釣り竿セット", pricePerDay: 2000, description: "竿、リール、仕掛け付き", available: false },
+];
+
 export interface Vehicle {
   id: string;
   name: string;

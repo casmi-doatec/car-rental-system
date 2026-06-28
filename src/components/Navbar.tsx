@@ -36,6 +36,7 @@ export default function Navbar() {
     { href: "/", label: t("nav.home") },
     { href: "/vehicles", label: t("nav.vehicles") },
     { href: "/availability", label: "空車確認" },
+    { href: "/about", label: "会社案内" },
     { href: "/contact", label: t("nav.contact") },
     { href: "/admin", label: t("nav.admin") },
   ];

@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import { useLanguage } from "@/context/LanguageContext";
-import { vehicles } from "@/data/demo";
+import { vehicles, rentalOptions } from "@/data/demo";
 
 export default function InquiryPage() {
   return (
@@ -34,8 +34,12 @@ function InquiryForm() {
   const vehicleId = searchParams.get("vehicle") || "";
   const pickupDate = searchParams.get("pickup") || "";
   const returnDate = searchParams.get("return") || "";
+  const pickupTime = searchParams.get("pickupTime") || "10:00";
+  const returnTime = searchParams.get("returnTime") || "10:00";
+  const optionIds = (searchParams.get("options") || "").split(",").filter(Boolean);
 
   const selectedVehicle = vehicles.find((v) => v.id === vehicleId);
+  const selectedOptions = rentalOptions.filter((o) => optionIds.includes(o.id));
 
   const [form, setForm] = useState({
     name: "",
@@ -220,13 +224,22 @@ function InquiryForm() {
                   {pickupDate && returnDate && (
                     <>
                       <Divider sx={{ my: 1.5 }} />
-                      <Typography variant="body2" sx={{ color: "#6B6B6B" }}>受取日: {pickupDate}</Typography>
-                      <Typography variant="body2" sx={{ color: "#6B6B6B" }}>返却日: {returnDate}</Typography>
+                      <Typography variant="body2" sx={{ color: "#6B6B6B" }}>受取: {pickupDate} {pickupTime}</Typography>
+                      <Typography variant="body2" sx={{ color: "#6B6B6B" }}>返却: {returnDate} {returnTime}</Typography>
+                      {selectedOptions.length > 0 && (
+                        <Box sx={{ mt: 1 }}>
+                          <Typography variant="caption" sx={{ color: "#999" }}>オプション:</Typography>
+                          {selectedOptions.map((o) => (
+                            <Typography key={o.id} variant="body2" sx={{ color: "#6B6B6B", pl: 1 }}>・{o.name} ¥{(o.pricePerDay * days).toLocaleString()}</Typography>
+                          ))}
+                        </Box>
+                      )}
                       {days > 0 && (
                         <Box sx={{ mt: 1.5, p: 1.5, bgcolor: "#FAFAF7", borderRadius: 1 }}>
-                          <Typography variant="body2" sx={{ color: "#6B6B6B" }}>見積り金額（税込）</Typography>
-                          <Typography sx={{ fontWeight: 700, color: "#B8363B", fontSize: "1.3rem" }}>
-                            &yen;{(selectedVehicle.pricePerDay * days).toLocaleString()}
+                          <Typography variant="body2" sx={{ color: "#6B6B6B" }}>車両: ¥{(selectedVehicle.pricePerDay * days).toLocaleString()}</Typography>
+                          {selectedOptions.length > 0 && <Typography variant="body2" sx={{ color: "#6B6B6B" }}>オプション: ¥{selectedOptions.reduce((s, o) => s + o.pricePerDay * days, 0).toLocaleString()}</Typography>}
+                          <Typography sx={{ fontWeight: 700, color: "#B8363B", fontSize: "1.3rem", mt: 0.5 }}>
+                            合計: &yen;{(selectedVehicle.pricePerDay * days + selectedOptions.reduce((s, o) => s + o.pricePerDay * days, 0)).toLocaleString()}
                           </Typography>
                           <Typography variant="caption" sx={{ color: "#999" }}>
                             ({days}日 x &yen;{selectedVehicle.pricePerDay.toLocaleString()})

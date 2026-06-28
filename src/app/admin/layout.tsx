@@ -24,6 +24,7 @@ import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import PeopleIcon from "@mui/icons-material/People";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import DescriptionIcon from "@mui/icons-material/Description";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 
@@ -37,6 +38,7 @@ const menuItems = [
   { path: "/admin/vehicles", label: "車両管理", icon: <DirectionsCarIcon />, badge: 0 },
   { path: "/admin/customers", label: "顧客管理", icon: <PeopleIcon />, badge: 0 },
   { path: "/admin/schedule", label: "スケジュール", icon: <CalendarMonthIcon />, badge: 0 },
+  { path: "/admin/options", label: "オプション品管理", icon: <ShoppingCartIcon />, badge: 0 },
   { path: "/admin/documents", label: "書類管理", icon: <DescriptionIcon />, badge: 0 },
 ];
 
